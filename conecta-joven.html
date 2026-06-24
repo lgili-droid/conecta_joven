@@ -1,0 +1,3211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conecta Joven · Prototipo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ============================================================
+   1. TOKENS DE DISEÑO
+   Acá está toda la paleta y tipografía. Si querés cambiar
+   colores o fuentes, es el único lugar que necesitás tocar.
+   ============================================================ */
+    :root {
+      /* violeta */
+      --violet-900: #2E2150;
+      --violet-700: #5B3F8C;
+      --violet-600: #7C5CBF;
+      --violet-400: #A98FDB;
+      --violet-200: #E3D9F5;
+      --violet-100: #F1ECFA;
+
+      /* verde oscuro */
+      --green-900: #15302A;
+      --green-700: #1F4D3F;
+      --green-500: #2F6B52;
+      --green-300: #86B7A1;
+
+      /* semáforo de bienestar (paleta suave, sin rojo) */
+      --zone-calma: #4F9D7C;
+      /* verde: bien / tranquilo */
+      --zone-alerta: #E3B65C;
+      /* dorado: regular / atención leve */
+      --zone-intenso: #E2876B;
+      /* coral: necesita acompañamiento */
+
+      /* neutros */
+      --cream: #FAF6EF;
+      --paper: #FFFFFF;
+      --ink: #2A2438;
+      --ink-soft: #6B6178;
+      --line: #E8E1F0;
+
+      /* tipografía */
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+
+      /* forma */
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --shadow-soft: 0 12px 30px -12px rgba(46, 33, 80, 0.25);
+      --shadow-card: 0 4px 16px -6px rgba(46, 33, 80, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 8%, var(--violet-200) 0%, transparent 45%),
+        radial-gradient(circle at 86% 92%, var(--green-300) 0%, transparent 40%),
+        var(--cream);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 28px 14px;
+    }
+
+    /* ============================================================
+   2. MARCO DE TELÉFONO
+   Todo el prototipo vive adentro de este "celular" simulado.
+   ============================================================ */
+    .phone {
+      position: relative;
+      width: min(390px, 92vw);
+      height: min(844px, 86vh);
+      aspect-ratio: 390/844;
+      background: var(--paper);
+      border-radius: 46px;
+      box-shadow: var(--shadow-soft), 0 0 0 10px var(--violet-900);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      flex: 0 0 auto;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 26px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .status-bar .pill-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 24px;
+      background: var(--violet-900);
+      border-radius: 0 0 18px 18px;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .app-area {
+      position: relative;
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      background: var(--cream);
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ============================================================
+   3. NAV INFERIOR
+   ============================================================ */
+    .bottom-nav {
+      flex: 0 0 auto;
+      display: flex;
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+      padding: 10px 6px 14px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      font-family: var(--font-body);
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 2px;
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-btn.active {
+      color: var(--violet-700);
+    }
+
+    .nav-btn.active svg {
+      stroke: var(--violet-700);
+    }
+
+    /* ============================================================
+   4. TIPOGRAFÍA Y ELEMENTOS GENERALES
+   ============================================================ */
+    .screen-header {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 22px 8px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--ink);
+    }
+
+    .title-xl {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 26px;
+      line-height: 1.15;
+      color: var(--violet-900);
+    }
+
+    .title-lg {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 21px;
+      color: var(--violet-900);
+    }
+
+    .eyebrow {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--green-700);
+    }
+
+    .muted {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .content {
+      padding: 14px 22px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      background: var(--violet-700);
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      padding: 14px 22px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 14.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 18px -8px rgba(91, 63, 140, 0.55);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--paper);
+      color: var(--violet-700);
+      border: 1.5px solid var(--violet-400);
+      border-radius: 100px;
+      padding: 13px 22px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 14.5px;
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      background: none;
+      border: none;
+      color: var(--violet-700);
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border-radius: 100px;
+      font-size: 12.5px;
+      font-weight: 700;
+      background: var(--violet-100);
+      color: var(--violet-700);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--violet-700);
+      color: #fff;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .chip-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .badge-validado {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--green-700);
+      background: rgba(47, 107, 82, 0.1);
+      padding: 4px 9px;
+      border-radius: 100px;
+    }
+
+    /* ============================================================
+   5. ONBOARDING / LOGIN
+   ============================================================ */
+    #screen-onboarding .content {
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .logo-mark {
+      width: 96px;
+      height: 96px;
+      border-radius: 28px;
+      object-fit: cover;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 6px;
+    }
+
+    #screen-onboarding .title-xl {
+      font-size: 30px;
+    }
+
+    .onboarding-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    #screen-login .logo-mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .field input,
+    .field select {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 13px 14px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      background: var(--paper);
+    }
+
+    .field input:focus {
+      outline: 2px solid var(--violet-400);
+      outline-offset: 1px;
+    }
+
+    /* ============================================================
+   6. INICIO (HOME)
+   ============================================================ */
+    .home-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 4px;
+    }
+
+    .greeting .eyebrow {
+      margin-bottom: 2px;
+    }
+
+    .avatar-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--violet-200);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--violet-700);
+      cursor: pointer;
+    }
+
+    /* el "compañero" emocional: orbe que respira y cambia de color */
+    .mood-orb-card {
+      background: linear-gradient(160deg, var(--violet-700), var(--violet-900));
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .mood-orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--zone-calma);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      animation: breathe 3.6s ease-in-out infinite;
+      box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    .mood-orb-text {
+      flex: 1;
+    }
+
+    .mood-orb-text .title-lg {
+      color: #fff;
+      font-size: 17px;
+      margin-bottom: 3px;
+    }
+
+    .mood-orb-text p {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.4;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .section-head .title-lg {
+      font-size: 16.5px;
+    }
+
+    .week-strip {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .day-dot {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .day-dot .dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--line);
+      border: 2px solid transparent;
+    }
+
+    .day-dot.is-today .dot {
+      border-color: var(--violet-700);
+    }
+
+    .day-dot span {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-body);
+    }
+
+    .quick-card .icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quick-card .icon-wrap svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .quick-card strong {
+      font-size: 13.5px;
+    }
+
+    .quick-card small {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+    }
+
+    .resource-of-day {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: var(--green-900);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+    }
+
+    .resource-of-day .icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .resource-of-day .icon-wrap svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+    }
+
+    .resource-of-day strong {
+      font-size: 13.5px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .resource-of-day span {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* ============================================================
+   7. ESCÁNER EMOCIONAL
+   ============================================================ */
+    .scanner-step {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .scanner-step.active {
+      display: flex;
+    }
+
+    .progress-track {
+      height: 5px;
+      background: var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 22px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--violet-600);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .emotion-card {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .emotion-card .emoji {
+      font-size: 26px;
+    }
+
+    .emotion-card span {
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .emotion-card.selected {
+      border-color: var(--violet-600);
+      background: var(--violet-100);
+    }
+
+    .intensity-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .intensity-emoji {
+      font-size: 54px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--violet-700);
+    }
+
+    .intensity-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 13px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      resize: none;
+      min-height: 120px;
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--violet-400);
+      outline-offset: 1px;
+    }
+
+    .scanner-footer {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .scanner-footer .btn-primary,
+    .scanner-footer .btn-secondary {
+      flex: 1;
+    }
+
+    .confirm-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .confirm-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+    }
+
+    .suggestion-card {
+      width: 100%;
+      background: var(--violet-100);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .suggestion-card .icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--violet-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .suggestion-card .icon-wrap svg {
+      width: 18px;
+      height: 18px;
+      stroke: #fff;
+    }
+
+    .suggestion-card strong {
+      font-size: 13px;
+      display: block;
+    }
+
+    .suggestion-card span {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+    }
+
+    /* ============================================================
+   8. SEMÁFORO DE BIENESTAR
+   ============================================================ */
+    .toggle-row {
+      display: flex;
+      background: var(--violet-100);
+      border-radius: 100px;
+      padding: 4px;
+    }
+
+    .toggle-row button {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 8px;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 12.5px;
+      color: var(--violet-700);
+      cursor: pointer;
+    }
+
+    .toggle-row button.active {
+      background: var(--violet-700);
+      color: #fff;
+    }
+
+    .ribbon-card {
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      padding: 18px 14px 8px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .ribbon-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 6px;
+      height: 90px;
+    }
+
+    .ribbon-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+    }
+
+    .ribbon-bubble {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+
+    .ribbon-bubble.empty {
+      background: var(--line);
+    }
+
+    .ribbon-col span {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .ribbon-col.selected .ribbon-bubble {
+      border-color: var(--violet-700);
+    }
+
+    .zone-legend {
+      display: flex;
+      gap: 14px;
+      padding: 14px 4px 4px;
+      flex-wrap: wrap;
+    }
+
+    .zone-legend .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .day-detail {
+      background: var(--violet-100);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 7px;
+    }
+
+    .month-dot {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 7px;
+    }
+
+    .insight-card {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--green-900);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .insight-card svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .insight-card p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* ============================================================
+   9. DIARIO PERSONAL
+   ============================================================ */
+    .diary-entry {
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+    }
+
+    .diary-entry-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .diary-date {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .diary-mood-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .diary-mood-tag .legend-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    .diary-entry p {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .lock-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      background: var(--violet-100);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+
+    .lock-note svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--violet-700);
+      flex: 0 0 auto;
+    }
+
+    .fab {
+      position: absolute;
+      right: 22px;
+      bottom: 88px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--violet-700);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px -8px rgba(91, 63, 140, 0.6);
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: #fff;
+    }
+
+    .mood-select-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mood-select-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 13px;
+      border-radius: 100px;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mood-select-pill.selected {
+      border-color: var(--violet-700);
+      background: var(--violet-100);
+    }
+
+    /* ============================================================
+   10. ACTIVIDADES
+   ============================================================ */
+    .activity-card {
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .activity-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      cursor: pointer;
+    }
+
+    .activity-head .icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 19px;
+    }
+
+    .activity-head-text {
+      flex: 1;
+    }
+
+    .activity-head-text strong {
+      font-size: 13.5px;
+      display: block;
+    }
+
+    .activity-head-text span {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+    }
+
+    .activity-chevron svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--ink-soft);
+      transition: transform 0.2s ease;
+    }
+
+    .activity-card.open .activity-chevron svg {
+      transform: rotate(90deg);
+    }
+
+    .activity-body {
+      display: none;
+      padding: 0 16px 16px;
+    }
+
+    .activity-card.open .activity-body {
+      display: block;
+    }
+
+    .activity-body ol {
+      padding-left: 18px;
+      margin-bottom: 12px;
+    }
+
+    .activity-body li {
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    .activity-done-btn {
+      width: 100%;
+      border-radius: 100px;
+      border: 1.5px solid var(--green-500);
+      background: none;
+      color: var(--green-700);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .activity-done-btn.done {
+      background: var(--green-500);
+      color: #fff;
+    }
+
+    .activity-done-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .breathing-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 4px 2px 2px;
+      text-align: center;
+    }
+
+    .breathing-panel .title-lg {
+      font-size: 22px;
+    }
+
+    .breathing-subtitle {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-top: -8px;
+    }
+
+    .breathing-options {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .breathing-option {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      box-shadow: 0 4px 14px -10px rgba(46, 33, 80, 0.4);
+    }
+
+    .breathing-option strong {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .breathing-option span {
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .breathing-option.active {
+      border-color: var(--zone-calma);
+      box-shadow: 0 0 0 3px rgba(79, 157, 124, 0.2);
+      color: var(--green-700);
+    }
+
+    .breathing-visual {
+      width: 214px;
+      height: 214px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(79, 157, 124, 0.12);
+    }
+
+    .breathing-ring {
+      width: 184px;
+      height: 184px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: conic-gradient(var(--zone-calma) 0deg, rgba(79, 157, 124, 0.16) 0deg);
+      transition: background 0.4s ease;
+    }
+
+    .breathing-orb {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-700);
+      font-weight: 800;
+      box-shadow: 0 0 0 18px rgba(79, 157, 124, 0.16);
+      transition: transform 3.8s ease-in-out, box-shadow 3.8s ease-in-out;
+    }
+
+    .breathing-orb.inhale {
+      transform: scale(1.16);
+      box-shadow: 0 0 0 34px rgba(79, 157, 124, 0.2);
+    }
+
+    .breathing-orb.hold {
+      transform: scale(1.16);
+      box-shadow: 0 0 0 26px rgba(79, 157, 124, 0.18);
+    }
+
+    .breathing-orb.exhale {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 12px rgba(79, 157, 124, 0.12);
+    }
+
+    .breathing-guide {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .breathing-timer {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      margin-top: -10px;
+    }
+
+    .breathing-pause-btn {
+      width: 100%;
+      border: none;
+      border-radius: 100px;
+      background: var(--violet-100);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+
+    /* ============================================================
+   11. BIBLIOTECA
+   ============================================================ */
+    .article-card {
+      display: flex;
+      gap: 12px;
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      padding: 13px;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+    }
+
+    .article-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .article-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .article-info strong {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .article-body p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .article-cover {
+      height: 150px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      margin-bottom: 6px;
+    }
+
+    /* Custom Audio Player Styles */
+    .audio-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .audio-player-card {
+      background: var(--paper);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .audio-player-card.playing {
+      border-color: var(--violet-400);
+      box-shadow: 0 8px 24px -10px rgba(91, 63, 140, 0.25);
+    }
+
+    .audio-player-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .audio-play-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--violet-700);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .audio-play-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .audio-title-wrap {
+      flex-grow: 1;
+    }
+
+    .audio-player-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .audio-player-subtitle {
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .audio-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .audio-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      min-width: 32px;
+    }
+
+    .audio-progress-container {
+      flex-grow: 1;
+      height: 6px;
+      background: var(--line);
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .audio-progress-bar {
+      height: 100%;
+      background: var(--violet-600);
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.1s linear;
+    }
+
+    /* ============================================================
+   12. PERFIL
+   ============================================================ */
+    .profile-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 22px 4px;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: var(--violet-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 26px;
+      color: var(--violet-700);
+    }
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-body);
+    }
+
+    .settings-item .icon-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--violet-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .settings-item .icon-wrap svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--violet-700);
+    }
+
+    .settings-item strong {
+      font-size: 13.5px;
+      display: block;
+    }
+
+    .settings-item small {
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+
+    .settings-item .chev {
+      margin-left: auto;
+    }
+
+    .settings-item .chev svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--ink-soft);
+    }
+
+    .help-card {
+      background: var(--green-900);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .help-card strong {
+      font-size: 14px;
+    }
+
+    .help-card p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .help-card .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    .school-map-card {
+      background: var(--violet-100);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* generic icon color helpers */
+    .bg-violet {
+      background: var(--violet-200);
+    }
+
+    .bg-violet svg {
+      stroke: var(--violet-700);
+    }
+
+    .bg-green {
+      background: rgba(47, 107, 82, 0.14);
+    }
+
+    .bg-green svg {
+      stroke: var(--green-700);
+    }
+
+    .bg-calma {
+      background: rgba(79, 157, 124, 0.16);
+    }
+
+    .bg-alerta {
+      background: rgba(227, 182, 92, 0.18);
+    }
+
+    .bg-intenso {
+      background: rgba(226, 135, 107, 0.18);
+    }
+
+    .helper-caption {
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      text-align: center;
+      max-width: 390px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="pill-notch"></div>
+      <div class="status-icons">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 12c5-5 15-5 20 0" />
+          <path d="M5 15c3.5-3.5 10.5-3.5 14 0" />
+          <circle cx="12" cy="19" r="1" fill="currentColor" />
+        </svg>
+        <svg width="20" height="13" viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="1" y="1" width="19" height="12" rx="3" />
+          <rect x="3.5" y="3.5" width="13" height="7" rx="1.5" fill="currentColor" stroke="none" />
+          <path d="M22 5v4" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="app-area">
+
+      <!-- ============================================================
+         PANTALLA: ONBOARDING
+    ============================================================= -->
+      <section class="screen active" id="screen-onboarding">
+        <div class="content">
+          <!-- LOGO: reemplazá este src por el logo final del equipo -->
+          <img class="logo-mark" src="logo.jpg" alt="Logo Conecta Joven">
+          <p class="eyebrow">Conecta Joven</p>
+          <h1 class="title-xl">Tu espacio para sentir,<br>entender y crecer</h1>
+          <p class="muted">Un lugar privado y seguro para conocer tus emociones, llevar tu diario y encontrar apoyo
+            confiable cuando lo necesites.</p>
+          <div class="onboarding-actions">
+            <button class="btn-primary" onclick="goTo('screen-login')">Comenzar</button>
+            <button class="btn-ghost" onclick="goTo('screen-signin')">Ya tengo una cuenta</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: LOGIN / REGISTRO RÁPIDO
+    ============================================================= -->
+      <form id="form-perfil" onsubmit="completeLogin(); return false;">
+        <section class="screen" id="screen-login">
+          <div class="screen-header">
+            <button type="button" class="back-btn" onclick="goTo('screen-onboarding')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+          <div class="content">
+            <img class="logo-mark" src="logo.jpg" alt="Logo Conecta Joven">
+            <h2 class="title-lg">Creá tu perfil</h2>
+            <p class="muted">Es privado. Solo vos podés ver lo que escribís.</p>
+
+            <div class="field">
+              <label for="input-nombre">¿Cómo te llamás?</label>
+              <input type="text" id="input-nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="field">
+              <label for="input-celular">Número de celular</label>
+              <input type="text" id="input-celular" placeholder="Tu número de celular" required>
+            </div>
+
+            <div class="field">
+              <label for="input-edad">Tu edad</label>
+              <select id="input-edad" required>
+                <option value="" selected disabled>Selecciona tu edad</option>
+                <option value="13">13 años</option>
+                <option value="14">14 años</option>
+                <option value="15">15 años</option>
+                <option value="16">16 años</option>
+                <option value="17">17 años</option>
+                <option value="18">18 años</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="input-escuela">Tu escuela</label>
+              <input type="text" id="input-escuela" placeholder="Nombre de tu escuela" required>
+            </div>
+
+            <div class="field">
+              <label for="input-curso">Tu curso</label>
+              <select id="input-curso" required>
+                <option value="" selected disabled>Selecciona tu curso</option>
+                <option value="1">Primero</option>
+                <option value="2">Segundo</option>
+                <option value="3">Tercero</option>
+                <option value="4">Cuarto</option>
+                <option value="5">Quinto</option>
+                <option value="6">Sexto</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="input-password">Contraseña</label>
+              <input type="password" id="input-password" placeholder="Ingresá una contraseña" required>
+            </div>
+
+            <div class="field">
+              <label for="input-password-confirm">Repetí la contraseña</label>
+              <input type="password" id="input-password-confirm" placeholder="Volvé a ingresar la contraseña" required>
+            </div>
+
+            <p id="error-password"
+              style="display:none; color:#d32f2f; font-size:14px; margin-top:-8px; margin-bottom:12px;">
+              Las contraseñas no coinciden
+            </p>
+
+            <div class="lock-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="10" width="16" height="10" rx="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+              <span>Prototipo: tus datos no se envían ni se guardan en una base de datos. En una versión real, se
+                pediría consentimiento antes de usarlos.</span>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top:8px;">
+              Ingresar
+            </button>
+
+            <div class="lock-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="10" width="16" height="10" rx="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+              <span>Tus datos y registros son confidenciales.</span>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <!-- ============================================================
+         PANTALLA: INICIAR SESIÓN (SIGNIN)
+    ============================================================= -->
+      <form id="form-signin" onsubmit="simulateLogin(); return false;">
+        <section class="screen" id="screen-signin">
+          <div class="screen-header">
+            <button type="button" class="back-btn" onclick="goTo('screen-onboarding')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+          <div class="content">
+            <img class="logo-mark" src="logo.jpg" alt="Logo Conecta Joven">
+            <h2 class="title-lg">Iniciá sesión</h2>
+            <p class="muted">Ingresá tus credenciales para acceder a tu perfil.</p>
+
+            <div class="field">
+              <label for="signin-dni">DNI</label>
+              <input type="text" id="signin-dni" placeholder="Tu DNI" required>
+            </div>
+
+            <div class="field">
+              <label for="signin-password">Contraseña</label>
+              <input type="password" id="signin-password" placeholder="Tu contraseña" required>
+            </div>
+
+            <p id="error-signin"
+              style="display:none; color:#d32f2f; font-size:14px; margin-top:-8px; margin-bottom:12px;">
+              DNI o contraseña incorrectos.
+            </p>
+
+            <button type="submit" class="btn-primary" style="margin-top:8px;">
+              Ingresar
+            </button>
+
+            <div class="lock-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="10" width="16" height="10" rx="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+              <span>Simulador de Login: Verifica los datos en el archivo `credenciales.txt` o usa DNI: 12345678, Clave:
+                clave123.</span>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <!-- ============================================================
+         PANTALLA: INICIO
+    ============================================================= -->
+      <section class="screen" id="screen-home">
+        <div class="home-header">
+          <div class="greeting">
+            <p class="eyebrow" id="home-date">Hoy</p>
+            <h1 class="title-lg" id="home-greeting">Hola 👋</h1>
+          </div>
+          <button class="avatar-btn" onclick="goTo('screen-perfil')" id="home-avatar">?</button>
+        </div>
+
+        <div class="content">
+
+          <div class="mood-orb-card">
+            <div class="mood-orb" id="home-orb">🙂</div>
+            <div class="mood-orb-text">
+              <p class="title-lg" id="home-orb-title">¿Cómo estás hoy?</p>
+              <p id="home-orb-subtitle">Hacé tu check-in emocional del día en menos de un minuto.</p>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="startScanner()">Hacer escáner emocional</button>
+
+          <div>
+            <div class="section-head">
+              <p class="title-lg">Tu semana</p>
+              <button class="btn-ghost" onclick="goTo('screen-semaforo')">Ver más</button>
+            </div>
+            <div class="week-strip" id="home-week-strip"></div>
+          </div>
+
+          <div>
+            <p class="title-lg" style="margin-bottom:10px;">Accesos rápidos</p>
+            <div class="quick-grid">
+              <button class="quick-card" onclick="goTo('screen-diario')">
+                <div class="icon-wrap bg-violet">${ICON_DIARIO}</div>
+                <div>
+                  <strong>Diario personal</strong><br><small>Privado y solo tuyo</small>
+                </div>
+              </button>
+              <button class="quick-card" onclick="goTo('screen-actividades')">
+                <div class="icon-wrap bg-green">${ICON_SPARKLE}</div>
+                <div>
+                  <strong>Actividades</strong><br><small>Ejercicios cortos</small>
+                </div>
+              </button>
+              <button class="quick-card" onclick="goTo('screen-biblioteca')">
+                <div class="icon-wrap bg-violet">${ICON_BOOK}</div>
+                <div>
+                  <strong>Biblioteca</strong><br><small>Recursos validados</small>
+                </div>
+              </button>
+              <button class="quick-card" onclick="goTo('screen-semaforo')">
+                <div class="icon-wrap bg-green">${ICON_SEMAFORO}</div>
+                <div>
+                  <strong>Semáforo</strong><br><small>Tu evolución</small>
+                </div>
+              </button>
+              <button class="quick-card" onclick="goTo('screen-ayuda')"
+                style="grid-column: span 2; border-color: var(--zone-intenso); background: rgba(226, 135, 107, 0.05); flex-direction: row; align-items: center; gap: 12px;">
+                <div class="icon-wrap bg-intenso">${ICON_PHONE}</div>
+                <div>
+                  <strong>Líneas de ayuda</strong><br><small>Números de emergencia y contención</small>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div class="resource-of-day" onclick="goTo('screen-biblioteca')">
+            <div class="icon-wrap">${ICON_BOOK_WHITE}</div>
+            <div>
+              <strong>Recurso del día</strong>
+              <span>3 señales para reconocer cuando necesitás un descanso emocional</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: ESCÁNER EMOCIONAL (flujo de varios pasos)
+    ============================================================= -->
+      <section class="screen" id="screen-scanner">
+        <div class="screen-header">
+          <button class="back-btn" onclick="exitScanner()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <p class="eyebrow">Escáner emocional</p>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="scanner-progress" style="width:33%"></div>
+        </div>
+
+        <div class="content" style="flex:1;">
+
+          <!-- paso 1: elegir emoción -->
+          <div class="scanner-step active" id="scanner-step-1">
+            <h2 class="title-lg">¿Qué emoción sentís con más fuerza ahora?</h2>
+            <div class="emotion-grid" id="emotion-grid"></div>
+            <div class="scanner-footer">
+              <button class="btn-primary" id="step1-next" onclick="scannerNext(2)" disabled>Continuar</button>
+            </div>
+          </div>
+
+          <!-- paso 2: intensidad -->
+          <div class="scanner-step" id="scanner-step-2">
+            <h2 class="title-lg">¿Qué tan fuerte la sentís?</h2>
+            <div class="intensity-wrap">
+              <div class="intensity-emoji" id="intensity-emoji">🙂</div>
+              <input type="range" min="1" max="5" value="3" id="intensity-range" oninput="updateIntensity()">
+              <div class="intensity-labels"><span>Leve</span><span>Intensa</span></div>
+            </div>
+            <div class="scanner-footer">
+              <button class="btn-secondary" onclick="scannerBack(1)">Atrás</button>
+              <button class="btn-primary" onclick="scannerNext(3)">Continuar</button>
+            </div>
+          </div>
+
+          <!-- paso 3: nota opcional -->
+          <div class="scanner-step" id="scanner-step-3">
+            <h2 class="title-lg">¿Querés contar qué pasó?</h2>
+            <p class="muted">Es opcional. Solo vos vas a poder leer esto.</p>
+            <textarea id="scanner-note" placeholder="Escribí lo que quieras (opcional)..."></textarea>
+            <div class="scanner-footer">
+              <button class="btn-secondary" onclick="scannerBack(2)">Atrás</button>
+              <button class="btn-primary" onclick="finishScanner()">Guardar registro</button>
+            </div>
+          </div>
+
+          <!-- paso 4: confirmación -->
+          <div class="scanner-step" id="scanner-step-4">
+            <div class="confirm-wrap">
+              <div class="confirm-circle" id="confirm-circle">🙂</div>
+              <h2 class="title-lg">Registro guardado</h2>
+              <p class="muted" id="confirm-text">Gracias por contarnos cómo estás. Esto se sumó a tu semáforo de
+                bienestar.</p>
+              <div class="suggestion-card" id="suggestion-card" onclick="goToFromScanner('screen-actividades')">
+                <div class="icon-wrap">${ICON_SPARKLE_WHITE}</div>
+                <div>
+                  <strong id="suggestion-title">Te puede ayudar: Necesito un respiro</strong>
+                  <span>3 min · Actividad de calma</span>
+                </div>
+              </div>
+              <button class="btn-primary" style="width:100%;" onclick="goToFromScanner('screen-home')">Volver al
+                inicio</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: SEMÁFORO DE BIENESTAR
+    ============================================================= -->
+      <section class="screen" id="screen-semaforo">
+        <div class="screen-header">
+          <p class="eyebrow">Tu evolución</p>
+        </div>
+        <div class="content">
+          <h1 class="title-xl">Semáforo de bienestar</h1>
+          <p class="muted">Así fue cambiando tu estado emocional. Tocá un día para ver el detalle.</p>
+
+          <div class="toggle-row">
+            <button class="active" id="toggle-semana" onclick="setSemaforoView('semana')">Semana</button>
+            <button id="toggle-mes" onclick="setSemaforoView('mes')">Mes</button>
+          </div>
+
+          <div class="ribbon-card" id="semana-view">
+            <div class="ribbon-row" id="ribbon-row"></div>
+            <div class="zone-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:var(--zone-calma)"></span>Calma</div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--zone-alerta)"></span>Atención
+                leve</div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--zone-intenso)"></span>Necesita
+                acompañamiento</div>
+            </div>
+          </div>
+
+          <div class="ribbon-card" id="mes-view" style="display:none;">
+            <div class="month-grid" id="month-grid"></div>
+          </div>
+
+          <div class="day-detail" id="day-detail" style="display:none;">
+            <p class="eyebrow" id="day-detail-date">Lunes</p>
+            <p class="title-lg" id="day-detail-mood" style="font-size:15px;">Tranquilo/a</p>
+            <p class="muted" id="day-detail-note">Sin nota guardada para este día.</p>
+          </div>
+
+          <div class="insight-card">
+            ${ICON_INFO_WHITE}
+            <p>Esta semana tu bienestar se mantuvo mayormente en calma, con un pico de atención el viernes. Las
+              instituciones solo ven datos generales y anónimos a través del Mapa de Bienestar Escolar — nunca tus
+              registros personales.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: DIARIO (LISTA)
+    ============================================================= -->
+      <section class="screen" id="screen-diario">
+        <div class="screen-header">
+          <p class="eyebrow">Privado</p>
+        </div>
+        <div class="content">
+          <h1 class="title-xl">Diario personal</h1>
+          <div class="lock-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="10" width="16" height="10" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+            <span>Nadie más puede leer tus entradas. Ni la escuela, ni tu familia.</span>
+          </div>
+          <div id="diary-list"></div>
+        </div>
+        <button class="fab" onclick="goTo('screen-diario-new')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: DIARIO (NUEVA ENTRADA)
+    ============================================================= -->
+      <section class="screen" id="screen-diario-new">
+        <div class="screen-header">
+          <button class="back-btn" onclick="goTo('screen-diario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <p class="eyebrow">Nueva entrada</p>
+        </div>
+        <div class="content" style="flex:1;">
+          <h2 class="title-lg">¿Qué tenés ganas de contar?</h2>
+          <div class="mood-select-row" id="diary-mood-select"></div>
+          <textarea id="diary-text" placeholder="Escribí acá. Este espacio es solo tuyo..."
+            style="min-height:200px;"></textarea>
+          <button class="btn-primary" onclick="saveDiaryEntry()">Guardar entrada</button>
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: ACTIVIDADES
+    ============================================================= -->
+      <section class="screen" id="screen-actividades">
+        <div class="screen-header">
+          <p class="eyebrow">Autoconocimiento</p>
+        </div>
+        <div class="content">
+          <h1 class="title-xl">Actividades</h1>
+          <p class="muted">Ejercicios breves para conocerte mejor y regular tus emociones.</p>
+          <div class="chip-row" id="activity-filters"></div>
+          <div id="activity-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: BIBLIOTECA (LISTA)
+    ============================================================= -->
+      <section class="screen" id="screen-biblioteca">
+        <div class="screen-header">
+          <p class="eyebrow">Biblioteca digital</p>
+        </div>
+        <div class="content">
+          <h1 class="title-xl">Recursos para vos</h1>
+          <span class="badge-validado">${ICON_CHECK_SM} Validado por profesionales</span>
+          <div class="chip-row" id="library-filters"></div>
+          <div id="library-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: ARTÍCULO (DETALLE)
+    ============================================================= -->
+      <section class="screen" id="screen-articulo">
+        <div class="screen-header">
+          <button class="back-btn" onclick="goTo('screen-biblioteca')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+        </div>
+        <div class="content" id="article-content"></div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: PERFIL
+    ============================================================= -->
+      <section class="screen" id="screen-perfil">
+        <div class="screen-header">
+          <p class="eyebrow">Tu cuenta</p>
+        </div>
+        <div class="profile-head">
+          <div class="profile-avatar" id="profile-avatar">?</div>
+          <p class="title-lg" id="profile-name">Tu nombre</p>
+          <p class="muted" id="profile-school">Tu escuela</p>
+        </div>
+        <div class="content">
+
+          <div class="help-card">
+            <strong>¿Necesitás hablar con alguien ahora?</strong>
+            <p>Está bien pedir ayuda. Si sentís que podés lastimarte, que alguien está en riesgo o que necesitás ayuda
+              urgente, hablá ahora con un adulto de confianza, el equipo de orientación de tu escuela o los servicios de
+              emergencia de tu zona.</p>
+            <button class="btn-secondary" onclick="goTo('screen-ayuda')">Ver líneas de ayuda</button>
+          </div>
+
+          <div class="settings-list">
+            <button class="settings-item">
+              <div class="icon-wrap">${ICON_USER}</div>
+              <div><strong>Editar perfil</strong><small>Nombre, escuela, foto</small></div>
+              <div class="chev">${ICON_CHEV}</div>
+            </button>
+            <button class="settings-item">
+              <div class="icon-wrap">${ICON_BELL}</div>
+              <div><strong>Notificaciones</strong><small>Recordatorios diarios</small></div>
+              <div class="chev">${ICON_CHEV}</div>
+            </button>
+            <button class="settings-item">
+              <div class="icon-wrap">${ICON_SHIELD}</div>
+              <div><strong>Privacidad</strong><small>Quién puede ver qué</small></div>
+              <div class="chev">${ICON_CHEV}</div>
+            </button>
+            <button class="settings-item" onclick="toggleSchoolMap()">
+              <div class="icon-wrap">${ICON_MAP}</div>
+              <div><strong>Mapa de Bienestar Escolar</strong><small>Cómo usa tu escuela los datos</small></div>
+              <div class="chev">${ICON_CHEV}</div>
+            </button>
+          </div>
+
+          <div class="school-map-card" id="school-map-info" style="display:none;">
+            <strong style="font-size:13px;">¿Qué ve tu escuela?</strong>
+            <p class="muted">Tu escuela accede únicamente a indicadores generales y anónimos del bienestar de todo el
+              curso, para poder planificar acompañamiento. Nunca ve tus registros, tu diario ni tu nombre asociado a un
+              estado emocional.</p>
+          </div>
+
+          <div class="settings-list">
+            <button class="settings-item">
+              <div class="icon-wrap">${ICON_LOGOUT}</div>
+              <div><strong>Cerrar sesión</strong></div>
+              <div class="chev">${ICON_CHEV}</div>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+         PANTALLA: LÍNEAS DE AYUDA (EMERGENCIA)
+    ============================================================= -->
+      <section class="screen" id="screen-ayuda">
+        <div class="screen-header">
+          <button class="back-btn" onclick="goTo('screen-home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <p class="eyebrow">Apoyo y contención</p>
+        </div>
+        <div class="content">
+          <h1 class="title-xl">Líneas de ayuda</h1>
+          <p class="muted">Si estás pasando por un momento difícil o necesitás ayuda urgente, no estás solo/a. Llamá
+            gratis desde cualquier celular tocando el número:</p>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+
+            <!-- 911 Emergencias -->
+            <a href="tel:911"
+              style="text-decoration:none; display:flex; align-items:center; gap:14px; background:var(--paper); border:1.5px solid var(--zone-intenso); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-card); color:inherit; transition:transform 0.2s;">
+              <div class="icon-wrap bg-intenso"
+                style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--zone-intenso);">
+                ${ICON_PHONE}
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <strong style="font-size:17px; color:var(--violet-900);">911</strong>
+                  <span
+                    style="font-size:10px; font-weight:700; text-transform:uppercase; background:rgba(226,135,107,0.15); color:var(--zone-intenso); padding:2px 8px; border-radius:100px;">Emergencias</span>
+                </div>
+                <p class="muted" style="font-size:12px; margin-top:2px;">Policía, bomberos y emergencias médicas las 24
+                  horas.</p>
+              </div>
+              <div style="color:var(--ink-soft); display:flex; align-items:center;">${ICON_CHEV}</div>
+            </a>
+
+            <!-- 102 Línea de los chicos -->
+            <a href="tel:102"
+              style="text-decoration:none; display:flex; align-items:center; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-card); color:inherit; transition:transform 0.2s;">
+              <div class="icon-wrap bg-violet"
+                style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--violet-700);">
+                ${ICON_PHONE}
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <strong style="font-size:17px; color:var(--violet-900);">102</strong>
+                  <span
+                    style="font-size:10px; font-weight:700; text-transform:uppercase; background:var(--violet-100); color:var(--violet-700); padding:2px 8px; border-radius:100px;">Derechos</span>
+                </div>
+                <p class="muted" style="font-size:12px; margin-top:2px;">Atención especializada para niños, niñas y
+                  adolescentes. Confidencial.</p>
+              </div>
+              <div style="color:var(--ink-soft); display:flex; align-items:center;">${ICON_CHEV}</div>
+            </a>
+
+            <!-- 135 Centro de asistencia al suicida -->
+            <a href="tel:135"
+              style="text-decoration:none; display:flex; align-items:center; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-card); color:inherit; transition:transform 0.2s;">
+              <div class="icon-wrap bg-green"
+                style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--green-700);">
+                ${ICON_PHONE}
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <strong style="font-size:17px; color:var(--violet-900);">135</strong>
+                  <span
+                    style="font-size:10px; font-weight:700; text-transform:uppercase; background:rgba(47,107,82,0.1); color:var(--green-700); padding:2px 8px; border-radius:100px;">Contención</span>
+                </div>
+                <p class="muted" style="font-size:12px; margin-top:2px;">Centro de Asistencia al Suicida. Apoyo
+                  emocional las 24 horas.</p>
+              </div>
+              <div style="color:var(--ink-soft); display:flex; align-items:center;">${ICON_CHEV}</div>
+            </a>
+
+            <!-- 144 Violencia de género -->
+            <a href="tel:144"
+              style="text-decoration:none; display:flex; align-items:center; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-card); color:inherit; transition:transform 0.2s;">
+              <div class="icon-wrap bg-violet"
+                style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--violet-700);">
+                ${ICON_PHONE}
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <strong style="font-size:17px; color:var(--violet-900);">144</strong>
+                  <span
+                    style="font-size:10px; font-weight:700; text-transform:uppercase; background:var(--violet-100); color:var(--violet-700); padding:2px 8px; border-radius:100px;">Género</span>
+                </div>
+                <p class="muted" style="font-size:12px; margin-top:2px;">Contención y asesoramiento ante situaciones de
+                  violencia de género.</p>
+              </div>
+              <div style="color:var(--ink-soft); display:flex; align-items:center;">${ICON_CHEV}</div>
+            </a>
+
+          </div>
+
+          <div class="lock-note" style="margin-top:14px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="10" width="16" height="10" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+            <span>Las llamadas son gratuitas y seguras. No dudes en comunicarte si lo necesitás.</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ============================================================
+       NAV INFERIOR (oculta en pantallas de flujo/registro)
+  ============================================================= -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-tab="screen-home" onclick="goTo('screen-home')">
+        ${ICON_HOME}<span>Inicio</span>
+      </button>
+      <button class="nav-btn" data-tab="screen-semaforo" onclick="goTo('screen-semaforo')">
+        ${ICON_SEMAFORO}<span>Semáforo</span>
+      </button>
+      <button class="nav-btn" data-tab="screen-diario" onclick="goTo('screen-diario')">
+        ${ICON_DIARIO}<span>Diario</span>
+      </button>
+      <button class="nav-btn" data-tab="screen-actividades" onclick="goTo('screen-actividades')">
+        ${ICON_SPARKLE}<span>Actividades</span>
+      </button>
+      <button class="nav-btn" data-tab="screen-biblioteca" onclick="goTo('screen-biblioteca')">
+        ${ICON_BOOK}<span>Biblioteca</span>
+      </button>
+      <button class="nav-btn" data-tab="screen-ayuda" onclick="goTo('screen-ayuda')">
+        ${ICON_PHONE}<span>Ayuda</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <p class="helper-caption">Prototipo interactivo de Conecta Joven · Tocá los botones para navegar como en una app real.
+  </p>
+
+  <script>
+    /* ============================================================
+       ÍCONOS (SVG en línea, reutilizables)
+       Cambiá acá si querés otro estilo de ícono.
+       ============================================================ */
+    const ICONS = {
+      home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
+      semaforo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="20" rx="3"/><circle cx="12" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg>`,
+      diario: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6"/></svg>`,
+      sparkle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/></svg>`,
+      book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+      user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>`,
+      bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>`,
+      shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>`,
+      map: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>`,
+      logout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>`,
+      chev: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`,
+      checkSm: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`,
+      info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 8v.01"/></svg>`,
+      check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`,
+      phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`
+    };
+
+    // Reemplaza los placeholders ${ICON_X} escritos en el HTML por el SVG real.
+    function injectIcons() {
+      const iconMap = {
+        ICON_HOME: ICONS.home,
+        ICON_SEMAFORO: ICONS.semaforo,
+        ICON_DIARIO: ICONS.diario,
+        ICON_SPARKLE: ICONS.sparkle,
+        ICON_SPARKLE_WHITE: ICONS.sparkle,
+        ICON_BOOK: ICONS.book,
+        ICON_BOOK_WHITE: ICONS.book,
+        ICON_USER: ICONS.user,
+        ICON_BELL: ICONS.bell,
+        ICON_SHIELD: ICONS.shield,
+        ICON_MAP: ICONS.map,
+        ICON_LOGOUT: ICONS.logout,
+        ICON_CHEV: ICONS.chev,
+        ICON_CHECK_SM: ICONS.checkSm,
+        ICON_INFO_WHITE: ICONS.info,
+        ICON_PHONE: ICONS.phone
+      };
+      const pattern = /\$\{(ICON_[A-Z_]+)\}/g;
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) {
+        if (pattern.test(walker.currentNode.nodeValue)) {
+          textNodes.push(walker.currentNode);
+        }
+        pattern.lastIndex = 0;
+      }
+      textNodes.forEach(node => {
+        const fragment = document.createDocumentFragment();
+        const parts = node.nodeValue.split(pattern);
+        parts.forEach((part, index) => {
+          if (index % 2 === 1 && iconMap[part]) {
+            const template = document.createElement('template');
+            template.innerHTML = iconMap[part].trim();
+            fragment.appendChild(template.content.cloneNode(true));
+          } else if (part) {
+            fragment.appendChild(document.createTextNode(part));
+          }
+        });
+        node.replaceWith(fragment);
+      });
+    }
+
+    /* ============================================================
+       DATOS DE EJEMPLO (mock data)
+       Edita estos arrays para cambiar el contenido de la app.
+       ============================================================ */
+
+    // cada emoción pertenece a una "zona" del semáforo: calma / alerta / intenso
+    const MOODS = [
+      { key: 'feliz', label: 'Feliz', emoji: '😊', zone: 'calma' },
+      { key: 'tranquilo', label: 'Tranquilo/a', emoji: '😌', zone: 'calma' },
+      { key: 'energico', label: 'Con energía', emoji: '⚡', zone: 'calma' },
+      { key: 'ansioso', label: 'Ansioso/a', emoji: '😟', zone: 'alerta' },
+      { key: 'confundido', label: 'Confundido/a', emoji: '😕', zone: 'alerta' },
+      { key: 'cansado', label: 'Cansado/a', emoji: '😴', zone: 'alerta' },
+      { key: 'triste', label: 'Triste', emoji: '😢', zone: 'intenso' },
+      { key: 'enojado', label: 'Enojado/a', emoji: '😠', zone: 'intenso' },
+    ];
+    const ZONE_COLOR = { calma: 'var(--zone-calma)', alerta: 'var(--zone-alerta)', intenso: 'var(--zone-intenso)' };
+    const ZONE_LABEL = { calma: 'Calma', alerta: 'Atención leve', intenso: 'Necesita acompañamiento' };
+
+    // datos de la semana (lunes a domingo). El último día (hoy) empieza vacío.
+    let weekData = [
+      { day: 'L', date: '15 jun', zone: 'calma', note: 'Buen día en general.' },
+      { day: 'M', date: '16 jun', zone: 'calma', note: 'Tranquilo, sin nada especial.' },
+      { day: 'M', date: '17 jun', zone: 'alerta', note: 'Un poco de presión por un examen.' },
+      { day: 'J', date: '18 jun', zone: 'calma', note: 'Mejor que el día anterior.' },
+      { day: 'V', date: '19 jun', zone: 'intenso', note: 'Discusión con un amigo, me afectó.' },
+      { day: 'S', date: '20 jun', zone: 'alerta', note: 'Cansancio acumulado de la semana.' },
+      { day: 'D', date: '21 jun', zone: null, note: null },
+    ];
+
+    let diaryEntries = [
+      { date: '18 jun', moodKey: 'tranquilo', text: 'Hoy estuvo más tranquilo el día. Pude estudiar sin tanta presión y eso me ayudó a estar de mejor humor.' },
+      { date: '17 jun', moodKey: 'ansioso', text: 'Sentí bastante nervios antes del examen. Traté de respirar hondo antes de entrar y ayudó un poco.' },
+      { date: '15 jun', moodKey: 'feliz', text: 'Salí con mis amigas después de mucho tiempo. Me hizo bien desconectar un rato.' },
+    ];
+
+    const ACTIVITIES = [
+      {
+        key: 'a1', title: 'Necesito un respiro', cat: 'Calma', time: '30 seg · 3 min', emoji: '🌬️', zone: 'calma',
+        steps: ['Inhalá por la nariz contando hasta 4.', 'Sostené el aire contando hasta 7.', 'Soltá el aire lento contando hasta 8.', 'Repetí el ciclo 4 veces.']
+      },
+      {
+        key: 'a2', title: 'Escaneo corporal', cat: 'Calma', time: '5 min', emoji: '🧘', zone: 'calma',
+        steps: ['Sentate cómodo/a y cerrá los ojos.', 'Recorré tu cuerpo de pies a cabeza, notando tensiones.', 'Aflojá cada zona que sientas tensa, sin apurarte.']
+      },
+      {
+        key: 'a3', title: 'Diario de gratitud', cat: 'Autoconocimiento', time: '4 min', emoji: '📝', zone: 'alerta',
+        steps: ['Pensá en 3 cosas buenas que pasaron hoy, por chicas que sean.', 'Escribí por qué cada una te hizo sentir bien.']
+      },
+      {
+        key: 'a4', title: 'Identificá tus fortalezas', cat: 'Autoconocimiento', time: '6 min', emoji: '🌟', zone: 'alerta',
+        steps: ['Anotá 3 cosas que hacés bien.', 'Pensá en una situación reciente donde usaste esa fortaleza.', 'Elegí una para poner en práctica esta semana.']
+      },
+      {
+        key: 'a5', title: 'Caminata consciente', cat: 'Energía', time: '10 min', emoji: '🚶', zone: 'calma',
+        steps: ['Salí a caminar sin el celular si podés.', 'Prestá atención a lo que ves, escuchás y sentís.', 'Notá tu respiración mientras caminás.']
+      },
+      {
+        key: 'a6', title: 'Carta a mí mismo/a', cat: 'Autoconocimiento', time: '8 min', emoji: '💌', zone: 'intenso',
+        steps: ['Escribite como si fueras tu mejor amigo/a.', 'Contate qué necesitás escuchar hoy.', 'Guardala para releerla otro día.']
+      },
+    ];
+
+    const ARTICLES = [
+      {
+        key: 'l1', title: '3 señales para reconocer cuando necesitás un descanso emocional', cat: 'Bienestar emocional', time: '4 min', emoji: '🧠', color: 'violet',
+        body: 'Reconocer el cansancio emocional a tiempo es el primer paso para cuidarte. Prestar atención a cambios en el sueño, la irritabilidad o la falta de ganas para hacer cosas que antes disfrutabas puede ayudarte a identificar cuándo necesitás bajar un cambio. Tomarte una pausa no es flojera: es una forma de cuidado. Hablar con alguien de confianza sobre cómo te sentís también alivia, aunque al principio cueste dar el primer paso.'
+      },
+      {
+        key: 'l2', title: 'Cómo hablarte mejor a vos mismo/a', cat: 'Autoestima', time: '5 min', emoji: '🪞', color: 'green',
+        body: 'La forma en que te hablás internamente influye mucho en cómo te sentís. Notar los pensamientos críticos y reemplazarlos por otros más amables, sin dejar de ser honesto/a con vos mismo/a, es una habilidad que se entrena con el tiempo. Practicar la autocompasión no significa no exigirse nada; significa tratarte con la misma comprensión que le darías a un amigo o amiga.'
+      },
+      {
+        key: 'l3', title: 'Técnicas simples para bajar el estrés antes de un examen', cat: 'Manejo del estrés', time: '3 min', emoji: '📚', color: 'violet',
+        body: 'Organizar el tiempo de estudio en bloques cortos con descansos, dormir lo suficiente la noche anterior y practicar una respiración pausada antes de entrar al aula pueden marcar una diferencia real. El estrés moderado es normal, pero cuando se vuelve constante vale la pena pedir ayuda a un docente, orientador o psicólogo.'
+      },
+      {
+        key: 'l4', title: 'Construir relaciones más sanas con amigos y pareja', cat: 'Relaciones saludables', time: '6 min', emoji: '🤝', color: 'green',
+        body: 'Una relación sana se reconoce por el respeto mutuo, la posibilidad de decir que no sin miedo y el espacio para ser vos mismo/a. Aprender a poner límites de forma clara y tranquila fortalece los vínculos en lugar de dañarlos. Si una relación te genera miedo o malestar constante, es importante hablarlo con un adulto de confianza.'
+      },
+      {
+        key: 'l5', title: 'Qué hacer si sentís que no encajás en el grupo', cat: 'Convivencia escolar', time: '4 min', emoji: '🏫', color: 'violet',
+        body: 'Sentirse fuera de lugar en la escuela es más común de lo que parece. Buscar espacios donde te sientas cómodo/a, aunque sean pocos vínculos, suele pesar más que encajar con todo el curso. Si la situación incluye burlas o exclusión sostenida, contarlo a un adulto de la institución es un paso válido y necesario.'
+      },
+      {
+        key: 'l6', title: 'Entender la ansiedad: qué es y qué no es', cat: 'Bienestar emocional', time: '5 min', emoji: '🌊', color: 'green',
+        body: 'La ansiedad es una respuesta natural del cuerpo frente a una amenaza percibida, y en dosis bajas puede incluso ayudarte a prepararte para un desafío. El problema aparece cuando se vuelve constante o desproporcionada. Identificar qué la dispara y aprender técnicas de respiración son herramientas útiles, pero si interfiere con tu día a día, conviene buscar acompañamiento profesional.'
+      },
+      {
+        key: 'l7', title: 'Voces que Inspiran', cat: 'Audioguías', time: '16 audios', emoji: '🎧', color: 'violet', isAudioList: true,
+        audios: [
+          { id: 'v1', title: 'A veces sentís que no podés más', src: 'audios/1.mp3' },
+          { id: 'v2', title: 'No sos tu dolor', src: 'audios/2.mp3' },
+          { id: 'v3', title: 'No tenes que poder con todo hoy', src: 'audios/3.mp3' },
+          { id: 'v4', title: 'Tu mente puede decirte cosas', src: 'audios/4.mp3' },
+          { id: 'v5', title: 'Está bien pedir ayuda', src: 'audios/5.mp3' },
+          { id: 'v6', title: 'Las tormentas pasan', src: 'audios/6.mp3' },
+          { id: 'v7', title: 'Lo que sentís importa', src: 'audios/7.mp3' },
+          { id: 'v8', title: 'Merecés tratarte mejor', src: 'audios/8.mp3' },
+          { id: 'v9', title: 'Mirá todo lo que superaste', src: 'audios/9.mp3' },
+          { id: 'v10', title: 'No sos una carga', src: 'audios/10.mp3' },
+          { id: 'v11', title: 'No tenés que fingir', src: 'audios/11.mp3' },
+          { id: 'v12', title: 'Permitite descansar', src: 'audios/12.mp3' },
+          { id: 'v13', title: 'Sos más que un resultado', src: 'audios/13.mp3' },
+          { id: 'v14', title: 'Todavía hay cosas por descubrir', src: 'audios/14.mp3' },
+          { id: 'v15', title: 'Tu valor no cambia', src: 'audios/15.mp3' },
+          { id: 'v16', title: 'Un paso a la vez', src: 'audios/16.mp3' }
+
+        ]
+      }
+    ];
+
+    /* ============================================================
+       ESTADO GENERAL
+       ============================================================ */
+    let userName = '';
+    let userSchool = '';
+    let scannerSelection = { moodKey: null, intensity: 3, note: '' };
+    let semaforoView = 'semana';
+    let diaryNewMoodKey = null;
+    let breathingDuration = 60;
+    let breathingElapsed = 0;
+    let breathingTimer = null;
+    let breathingPaused = false;
+
+    const BREATHING_DURATIONS = [
+      { seconds: 30, top: '30', bottom: 'seg' },
+      { seconds: 60, top: '1', bottom: 'min' },
+      { seconds: 180, top: '3', bottom: 'min' }
+    ];
+
+    const BREATHING_PHASES = [
+      { key: 'inhale', label: 'Inhalá', guide: 'Inhalá por la nariz...', length: 4 },
+      { key: 'hold', label: 'Sostené', guide: 'Sostené el aire...', length: 2 },
+      { key: 'exhale', label: 'Exhalá', guide: 'Soltá el aire lento...', length: 6 }
+    ];
+
+    /* ============================================================
+       NAVEGACIÓN ENTRE PANTALLAS
+       ============================================================ */
+    function goTo(screenId) {
+      if (typeof stopAllAudios === 'function') stopAllAudios();
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+
+      const navScreens = ['screen-home', 'screen-semaforo', 'screen-diario', 'screen-actividades', 'screen-biblioteca', 'screen-ayuda'];
+      const nav = document.getElementById('bottom-nav');
+      if (navScreens.includes(screenId)) {
+        nav.style.display = 'flex';
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.tab === screenId);
+        });
+      } else {
+        nav.style.display = 'none';
+      }
+    }
+
+    function completeLogin() {
+      const nombre = document.getElementById('input-nombre').value.trim() || 'Joven';
+      const escuela = document.getElementById('input-escuela').value.trim() || 'tu escuela';
+      const password = document.getElementById('input-password');
+      const passwordConfirm = document.getElementById('input-password-confirm');
+      const error = document.getElementById('error-password');
+
+      /*      if (password.value !== passwordConfirm.value) {
+                passwordConfirm.setCustomValidity('Las contraseñas no coinciden');
+                passwordConfirm.reportValidity();
+                return;
+            }
+            
+            passwordConfirm.setCustomValidity('');
+      */
+
+      if (password.value !== passwordConfirm.value) {
+        error.style.display = 'block';
+        return;
+      }
+
+      error.style.display = 'none';
+
+
+      userName = nombre;
+      userSchool = escuela;
+
+      document.getElementById('home-greeting').textContent = 'Hola, ' + nombre.split(' ')[0] + ' 👋';
+      document.getElementById('home-avatar').textContent = nombre.charAt(0).toUpperCase();
+      document.getElementById('profile-name').textContent = nombre;
+      document.getElementById('profile-school').textContent = escuela;
+      document.getElementById('profile-avatar').textContent = nombre.charAt(0).toUpperCase();
+      document.getElementById('home-date').textContent = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+      goTo('screen-home');
+
+
+    }
+
+    function simulateLogin() {
+      const inputDni = document.getElementById('signin-dni').value.trim();
+      const inputPassword = document.getElementById('signin-password').value.trim();
+      const errorEl = document.getElementById('error-signin');
+
+      // Valores para el prototipo
+      let validDni = "123456";
+      let validPassword = "123";
+      let nombre = "Luciano";
+      let escuela = "Escuela de Agricutura";
+
+      if (inputDni === validDni && inputPassword === validPassword) {
+        errorEl.style.display = 'none';
+
+        userName = nombre;
+        userSchool = escuela;
+
+        document.getElementById('home-greeting').textContent = 'Hola, ' + nombre.split(' ')[0] + ' 👋';
+        document.getElementById('home-avatar').textContent = nombre.charAt(0).toUpperCase();
+        document.getElementById('profile-name').textContent = nombre;
+        document.getElementById('profile-school').textContent = escuela;
+        document.getElementById('profile-avatar').textContent = nombre.charAt(0).toUpperCase();
+        document.getElementById('home-date').textContent = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        // Limpiar campos
+        document.getElementById('signin-dni').value = '';
+        document.getElementById('signin-password').value = '';
+
+        goTo('screen-home');
+      } else {
+        errorEl.style.display = 'block';
+      }
+    }
+
+    document.getElementById('input-password-confirm').addEventListener('input', function () {
+      this.setCustomValidity('');
+    });
+
+
+    /* ============================================================
+       INICIO: franja de la semana
+       ============================================================ */
+    function renderHomeWeekStrip() {
+      const wrap = document.getElementById('home-week-strip');
+      wrap.innerHTML = weekData.map((d, i) => `
+    <div class="day-dot ${i === weekData.length - 1 ? 'is-today' : ''}">
+      <div class="dot" style="background:${d.zone ? ZONE_COLOR[d.zone] : 'var(--line)'}"></div>
+      <span>${d.day}</span>
+    </div>
+  `).join('');
+    }
+
+    /* ============================================================
+       ESCÁNER EMOCIONAL
+       ============================================================ */
+    function renderEmotionGrid() {
+      const grid = document.getElementById('emotion-grid');
+      grid.innerHTML = MOODS.map(m => `
+    <button class="emotion-card" data-key="${m.key}" onclick="selectEmotion('${m.key}')">
+      <span class="emoji">${m.emoji}</span>
+      <span>${m.label}</span>
+    </button>
+  `).join('');
+    }
+
+    function selectEmotion(key) {
+      scannerSelection.moodKey = key;
+      document.querySelectorAll('.emotion-card').forEach(c => c.classList.toggle('selected', c.dataset.key === key));
+      document.getElementById('step1-next').disabled = false;
+    }
+
+    function startScanner() {
+      scannerSelection = { moodKey: null, intensity: 3, note: '' };
+      document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('step1-next').disabled = true;
+      document.getElementById('scanner-note').value = '';
+      document.getElementById('intensity-range').value = 3;
+      updateIntensity();
+      scannerGoToStep(1);
+      goTo('screen-scanner');
+    }
+
+    function exitScanner() { goTo('screen-home'); }
+
+    function scannerGoToStep(step) {
+      document.querySelectorAll('.scanner-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('scanner-step-' + step).classList.add('active');
+      document.getElementById('scanner-progress').style.width = (step * 25) + '%';
+    }
+    function scannerNext(step) { scannerGoToStep(step); }
+    function scannerBack(step) { scannerGoToStep(step); }
+
+    function updateIntensity() {
+      const val = parseInt(document.getElementById('intensity-range').value, 10);
+      scannerSelection.intensity = val;
+      const moodObj = MOODS.find(m => m.key === scannerSelection.moodKey) || MOODS[0];
+      document.getElementById('intensity-emoji').textContent = moodObj.emoji;
+    }
+
+    function finishScanner() {
+      scannerSelection.note = document.getElementById('scanner-note').value.trim();
+      const moodObj = MOODS.find(m => m.key === scannerSelection.moodKey) || MOODS[0];
+
+      // actualiza el día de hoy en la semana
+      weekData[weekData.length - 1].zone = moodObj.zone;
+      weekData[weekData.length - 1].note = scannerSelection.note || 'Sin nota.';
+      renderHomeWeekStrip();
+
+      // actualiza el orbe de inicio
+      document.getElementById('home-orb').textContent = moodObj.emoji;
+      document.getElementById('home-orb').style.background = ZONE_COLOR[moodObj.zone];
+      document.getElementById('home-orb-title').textContent = 'Hoy te sentís ' + moodObj.label.toLowerCase();
+      document.getElementById('home-orb-subtitle').textContent = 'Gracias por registrarlo. Podés volver a hacerlo mañana.';
+
+      // pantalla de confirmación
+      document.getElementById('confirm-circle').textContent = moodObj.emoji;
+      document.getElementById('confirm-circle').style.background = ZONE_COLOR[moodObj.zone];
+
+      const sugerida = ACTIVITIES.find(a => a.zone === moodObj.zone) || ACTIVITIES[0];
+      document.getElementById('suggestion-title').textContent = 'Te puede ayudar: ' + sugerida.title;
+
+      scannerGoToStep(4);
+    }
+
+    function goToFromScanner(screenId) { goTo(screenId); }
+
+    /* ============================================================
+       SEMÁFORO DE BIENESTAR
+       ============================================================ */
+    function renderRibbon() {
+      const row = document.getElementById('ribbon-row');
+      row.innerHTML = weekData.map((d, i) => `
+    <button class="ribbon-col" data-index="${i}" onclick="showDayDetail(${i})">
+      <div class="ribbon-bubble ${d.zone ? '' : 'empty'}" style="background:${d.zone ? ZONE_COLOR[d.zone] : ''}"></div>
+      <span>${d.day}</span>
+    </button>
+  `).join('');
+    }
+
+    function showDayDetail(index) {
+      document.querySelectorAll('.ribbon-col').forEach(c => c.classList.remove('selected'));
+      document.querySelector('.ribbon-col[data-index="' + index + '"]').classList.add('selected');
+
+      const d = weekData[index];
+      const panel = document.getElementById('day-detail');
+      panel.style.display = 'flex';
+      document.getElementById('day-detail-date').textContent = d.date;
+      document.getElementById('day-detail-mood').textContent = d.zone ? ZONE_LABEL[d.zone] : 'Todavía sin registro';
+      document.getElementById('day-detail-note').textContent = d.note || 'Sin nota guardada para este día.';
+    }
+
+    function setSemaforoView(view) {
+      semaforoView = view;
+      document.getElementById('toggle-semana').classList.toggle('active', view === 'semana');
+      document.getElementById('toggle-mes').classList.toggle('active', view === 'mes');
+      document.getElementById('semana-view').style.display = view === 'semana' ? 'block' : 'none';
+      document.getElementById('mes-view').style.display = view === 'mes' ? 'block' : 'none';
+    }
+
+    function renderMonthGrid() {
+      // datos de ejemplo fijos para representar 30 días del mes
+      const sample = ['calma', 'calma', 'alerta', 'calma', 'calma', 'intenso', 'alerta',
+        'calma', 'calma', 'calma', 'alerta', 'calma', 'calma', 'calma',
+        'intenso', 'alerta', 'calma', 'calma', 'calma', 'alerta', 'calma',
+        'calma', 'calma', 'alerta', 'intenso', 'calma', 'calma', 'calma', 'calma', 'calma'];
+      const grid = document.getElementById('month-grid');
+      grid.innerHTML = sample.map(zone => `<div class="month-dot" style="background:${ZONE_COLOR[zone]}"></div>`).join('');
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+    /* ============================================================
+       DIARIO PERSONAL
+       ============================================================ */
+    function renderDiaryList() {
+      const list = document.getElementById('diary-list');
+      if (diaryEntries.length === 0) {
+        list.innerHTML = '<p class="muted">Todavía no escribiste ninguna entrada. Tocá el botón + para empezar.</p>';
+        return;
+      }
+      list.innerHTML = diaryEntries.map(e => {
+        const mood = MOODS.find(m => m.key === e.moodKey) || MOODS[0];
+        return `
+      <div class="diary-entry">
+        <div class="diary-entry-top">
+          <span class="diary-date">${e.date}</span>
+          <span class="diary-mood-tag"><span class="legend-dot" style="background:${ZONE_COLOR[mood.zone]}"></span>${mood.label}</span>
+        </div>
+        <p>${escapeHtml(e.text)}</p>
+      </div>
+    `;
+      }).join('');
+    }
+
+    function renderDiaryMoodSelect() {
+      const wrap = document.getElementById('diary-mood-select');
+      wrap.innerHTML = MOODS.map(m => `
+    <button class="mood-select-pill" data-key="${m.key}" onclick="pickDiaryMood('${m.key}')">${m.emoji} ${m.label}</button>
+  `).join('');
+    }
+
+    function pickDiaryMood(key) {
+      diaryNewMoodKey = key;
+      document.querySelectorAll('.mood-select-pill').forEach(p => p.classList.toggle('selected', p.dataset.key === key));
+    }
+
+    function saveDiaryEntry() {
+      const text = document.getElementById('diary-text').value.trim();
+      if (!text) { return; }
+      const today = new Date();
+      const dateStr = today.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+      diaryEntries.unshift({ date: dateStr, moodKey: diaryNewMoodKey || 'tranquilo', text });
+
+      document.getElementById('diary-text').value = '';
+      document.querySelectorAll('.mood-select-pill').forEach(p => p.classList.remove('selected'));
+      diaryNewMoodKey = null;
+
+      renderDiaryList();
+      goTo('screen-diario');
+    }
+
+    /* ============================================================
+       ACTIVIDADES
+       ============================================================ */
+    let activityFilter = 'Todas';
+
+    function renderActivityFilters() {
+      const cats = ['Todas', ...new Set(ACTIVITIES.map(a => a.cat))];
+      const wrap = document.getElementById('activity-filters');
+      wrap.innerHTML = cats.map(c => `
+    <button class="chip ${c === activityFilter ? 'active' : ''}" onclick="setActivityFilter('${c}')">${c}</button>
+  `).join('');
+    }
+
+    function setActivityFilter(cat) {
+      activityFilter = cat;
+      renderActivityFilters();
+      renderActivityList();
+    }
+
+    function renderActivityList() {
+      const list = document.getElementById('activity-list');
+      const items = ACTIVITIES.filter(a => activityFilter === 'Todas' || a.cat === activityFilter);
+      list.innerHTML = items.map(a => `
+    <div class="activity-card" id="activity-${a.key}">
+      <div class="activity-head" onclick="toggleActivity('${a.key}')">
+        <div class="icon-wrap bg-${a.zone}">${a.emoji}</div>
+        <div class="activity-head-text">
+          <strong>${a.title}</strong>
+          <span>${a.cat} · ${a.time}</span>
+        </div>
+        <div class="activity-chevron">${ICONS.chev}</div>
+      </div>
+      <div class="activity-body">
+        ${a.key === 'a1' ? renderBreathingActivity() : `
+          <ol>${a.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+          <button class="activity-done-btn" onclick="event.stopPropagation(); toggleActivityDone(this)">
+            ${ICONS.check} Marcar como completada
+          </button>
+        `}
+      </div>
+    </div>
+  `).join('');
+    }
+
+    function toggleActivity(key) {
+      const card = document.getElementById('activity-' + key);
+      card.classList.toggle('open');
+      if (key === 'a1') {
+        if (card.classList.contains('open')) {
+          startBreathingSession(breathingDuration);
+          setTimeout(() => {
+            const panel = card.querySelector('.breathing-panel');
+            const screen = document.getElementById('screen-actividades');
+            if (panel && screen) {
+              screen.scrollTo({ top: panel.offsetTop - 12, behavior: 'smooth' });
+            }
+          }, 0);
+        } else {
+          stopBreathingSession();
+        }
+      }
+    }
+    function toggleActivityDone(btn) {
+      btn.classList.toggle('done');
+      btn.innerHTML = btn.classList.contains('done')
+        ? ICONS.check + ' ¡Completada!'
+        : ICONS.check + ' Marcar como completada';
+    }
+
+    function renderBreathingActivity() {
+      const options = BREATHING_DURATIONS.map(d => `
+    <button class="breathing-option ${d.seconds === breathingDuration ? 'active' : ''}" onclick="event.stopPropagation(); selectBreathingDuration(${d.seconds})">
+      <strong>${d.top}</strong>
+      <span>${d.bottom}</span>
+    </button>
+  `).join('');
+
+      return `
+    <div class="breathing-panel" onclick="event.stopPropagation()">
+      <h2 class="title-lg">Respirar ahora</h2>
+      <p class="breathing-subtitle">Elegí la duración</p>
+      <div class="breathing-options">${options}</div>
+      <div class="breathing-visual">
+        <div class="breathing-ring" id="breathing-ring">
+          <div class="breathing-orb inhale" id="breathing-orb">
+            <strong id="breathing-phase">Inhalá</strong>
+          </div>
+        </div>
+      </div>
+      <p class="breathing-guide" id="breathing-guide">Inhalá por la nariz...</p>
+      <p class="breathing-timer" id="breathing-timer">1:00 restante</p>
+      <button class="breathing-pause-btn" onclick="event.stopPropagation(); toggleBreathingPause()">
+        <span id="breathing-pause-icon">Ⅱ</span>
+        <span id="breathing-pause-text">Pausar</span>
+      </button>
+    </div>
+  `;
+    }
+
+    function selectBreathingDuration(seconds) {
+      breathingDuration = seconds;
+      document.querySelectorAll('.breathing-option').forEach(btn => btn.classList.remove('active'));
+      const selectedIndex = BREATHING_DURATIONS.findIndex(d => d.seconds === seconds);
+      const selected = document.querySelectorAll('.breathing-option')[selectedIndex];
+      if (selected) selected.classList.add('active');
+      startBreathingSession(seconds);
+    }
+
+    function startBreathingSession(seconds = breathingDuration) {
+      stopBreathingSession();
+      breathingDuration = seconds;
+      breathingElapsed = 0;
+      breathingPaused = false;
+      updateBreathingUI();
+      breathingTimer = setInterval(() => {
+        if (breathingPaused) return;
+        breathingElapsed += 1;
+        if (breathingElapsed >= breathingDuration) {
+          breathingElapsed = breathingDuration;
+          updateBreathingUI(true);
+          stopBreathingSession(false);
+          return;
+        }
+        updateBreathingUI();
+      }, 1000);
+    }
+
+    function stopBreathingSession(resetText = true) {
+      if (breathingTimer) {
+        clearInterval(breathingTimer);
+        breathingTimer = null;
+      }
+      if (resetText) breathingPaused = false;
+    }
+
+    function toggleBreathingPause() {
+      if (!breathingTimer && breathingElapsed >= breathingDuration) {
+        startBreathingSession(breathingDuration);
+        return;
+      }
+      breathingPaused = !breathingPaused;
+      updateBreathingControls();
+    }
+
+    function updateBreathingUI(done = false) {
+      const totalCycle = BREATHING_PHASES.reduce((sum, p) => sum + p.length, 0);
+      const cycleSecond = breathingElapsed % totalCycle;
+      let cursor = 0;
+      let phase = BREATHING_PHASES[0];
+
+      for (const item of BREATHING_PHASES) {
+        if (cycleSecond >= cursor && cycleSecond < cursor + item.length) {
+          phase = item;
+          break;
+        }
+        cursor += item.length;
+      }
+
+      const remaining = Math.max(breathingDuration - breathingElapsed, 0);
+      const progress = breathingDuration ? (breathingElapsed / breathingDuration) * 360 : 0;
+      const orb = document.getElementById('breathing-orb');
+      const ring = document.getElementById('breathing-ring');
+      const phaseEl = document.getElementById('breathing-phase');
+      const guide = document.getElementById('breathing-guide');
+      const timer = document.getElementById('breathing-timer');
+
+      if (orb) {
+        orb.className = 'breathing-orb ' + phase.key;
+      }
+      if (ring) {
+        ring.style.background = `conic-gradient(var(--zone-calma) ${progress}deg, rgba(79,157,124,0.16) ${progress}deg)`;
+      }
+      if (phaseEl) phaseEl.textContent = done ? 'Listo' : phase.label;
+      if (guide) guide.textContent = done ? 'Bien. Volvé de a poco.' : phase.guide;
+      if (timer) timer.textContent = formatBreathingTime(remaining) + ' restante';
+      updateBreathingControls(done);
+    }
+
+    function updateBreathingControls(done = false) {
+      const icon = document.getElementById('breathing-pause-icon');
+      const text = document.getElementById('breathing-pause-text');
+      if (!icon || !text) return;
+      if (done || (!breathingTimer && breathingElapsed >= breathingDuration)) {
+        icon.textContent = '↻';
+        text.textContent = 'Repetir';
+        return;
+      }
+      icon.textContent = breathingPaused ? '▶' : 'Ⅱ';
+      text.textContent = breathingPaused ? 'Reanudar' : 'Pausar';
+    }
+
+    function formatBreathingTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${String(secs).padStart(2, '0')}`;
+    }
+
+    /* ============================================================
+       BIBLIOTECA
+       ============================================================ */
+    let libraryFilter = 'Todas';
+
+    function renderLibraryFilters() {
+      const cats = ['Todas', ...new Set(ARTICLES.map(a => a.cat))];
+      const wrap = document.getElementById('library-filters');
+      wrap.innerHTML = cats.map(c => `
+    <button class="chip ${c === libraryFilter ? 'active' : ''}" onclick="setLibraryFilter('${c}')">${c}</button>
+  `).join('');
+    }
+
+    function setLibraryFilter(cat) {
+      libraryFilter = cat;
+      renderLibraryFilters();
+      renderLibraryList();
+    }
+
+    function renderLibraryList() {
+      const list = document.getElementById('library-list');
+      const items = ARTICLES.filter(a => libraryFilter === 'Todas' || a.cat === libraryFilter);
+      list.innerHTML = items.map(a => `
+    <div class="article-card" onclick="openArticle('${a.key}')">
+      <div class="article-thumb bg-${a.color}">${a.emoji}</div>
+      <div class="article-info">
+        <strong>${a.title}</strong>
+        <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time}</span></div>
+      </div>
+    </div>
+  `).join('');
+    }
+
+    function openArticle(key) {
+      const a = ARTICLES.find(x => x.key === key);
+      const wrap = document.getElementById('article-content');
+      if (a.isAudioList) {
+        wrap.innerHTML = `
+      <div class="article-cover bg-${a.color}">${a.emoji}</div>
+      <span class="badge-validado">${ICONS.checkSm} Validado por profesionales</span>
+      <h1 class="title-xl">${a.title}</h1>
+      <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time}</span></div>
+      <div class="article-body">
+        <p style="margin-bottom: 16px;">Escuchá estas audioguías cortas diseñadas para brindarte calma, motivación y herramientas en tu día a día.</p>
+        <div class="audio-list">
+          ${a.audios.map(item => `
+            <div class="audio-player-card" id="card-${item.id}">
+              <audio id="native-audio-${item.id}" src="${item.src}" preload="metadata" ontimeupdate="updateAudioProgress('${item.id}')" onended="audioEnded('${item.id}')" onloadedmetadata="initAudioMetadata('${item.id}')"></audio>
+              <div class="audio-player-header">
+                <button class="audio-play-btn" id="btn-${item.id}" onclick="toggleAudioPlay('${item.id}')">
+                  <svg id="icon-play-${item.id}" viewBox="0 0 24 24" style="width:18px; height:18px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>
+                  <svg id="icon-pause-${item.id}" viewBox="0 0 24 24" style="display:none; width:18px; height:18px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <div class="audio-title-wrap">
+                  <div class="audio-player-title">${item.title}</div>
+                  <div class="audio-player-subtitle">Audioguía · MP3</div>
+                </div>
+              </div>
+              <div class="audio-controls-row">
+                <span class="audio-time" id="time-current-${item.id}">0:00</span>
+                <div class="audio-progress-container" onclick="seekAudio(event, '${item.id}')">
+                  <div class="audio-progress-bar" id="progress-${item.id}"></div>
+                </div>
+                <span class="audio-time" id="time-total-${item.id}">0:00</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+      } else {
+        wrap.innerHTML = `
+      <div class="article-cover bg-${a.color}">${a.emoji}</div>
+      <span class="badge-validado">${ICONS.checkSm} Validado por profesionales</span>
+      <h1 class="title-xl">${a.title}</h1>
+      <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time} de lectura</span></div>
+      <div class="article-body"><p>${a.body}</p></div>
+    `;
+      }
+      goTo('screen-articulo');
+    }
+
+    /* ============================================================
+       CONTROLLER DE AUDIO
+       ============================================================ */
+    function stopAllAudios() {
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+      });
+      // Reestablece todos los botones y clases
+      ARTICLES.forEach(a => {
+        if (a.isAudioList) {
+          a.audios.forEach(item => {
+            const btnPlay = document.getElementById('icon-play-' + item.id);
+            const btnPause = document.getElementById('icon-pause-' + item.id);
+            const card = document.getElementById('card-' + item.id);
+            if (btnPlay) btnPlay.style.display = 'block';
+            if (btnPause) btnPause.style.display = 'none';
+            if (card) card.classList.remove('playing');
+          });
+        }
+      });
+    }
+
+    function toggleAudioPlay(id) {
+      const audio = document.getElementById('native-audio-' + id);
+      const btnPlay = document.getElementById('icon-play-' + id);
+      const btnPause = document.getElementById('icon-pause-' + id);
+      const card = document.getElementById('card-' + id);
+
+      if (!audio) return;
+
+      if (audio.paused) {
+        // Pausar todos los demás primero
+        document.querySelectorAll('audio').forEach(otherAudio => {
+          if (otherAudio.id !== 'native-audio-' + id) {
+            otherAudio.pause();
+            const otherId = otherAudio.id.replace('native-audio-', '');
+            const pBtnPlay = document.getElementById('icon-play-' + otherId);
+            const pBtnPause = document.getElementById('icon-pause-' + otherId);
+            const pCard = document.getElementById('card-' + otherId);
+            if (pBtnPlay) pBtnPlay.style.display = 'block';
+            if (pBtnPause) pBtnPause.style.display = 'none';
+            if (pCard) pCard.classList.remove('playing');
+          }
+        });
+
+        audio.play();
+        if (btnPlay) btnPlay.style.display = 'none';
+        if (btnPause) btnPause.style.display = 'block';
+        if (card) card.classList.add('playing');
+      } else {
+        audio.pause();
+        if (btnPlay) btnPlay.style.display = 'block';
+        if (btnPause) btnPause.style.display = 'none';
+        if (card) card.classList.remove('playing');
+      }
+    }
+
+    function updateAudioProgress(id) {
+      const audio = document.getElementById('native-audio-' + id);
+      const progress = document.getElementById('progress-' + id);
+      const timeCurrent = document.getElementById('time-current-' + id);
+      const timeTotal = document.getElementById('time-total-' + id);
+
+      if (!audio) return;
+
+      if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        if (progress) progress.style.width = pct + '%';
+        if (timeCurrent) timeCurrent.textContent = formatAudioTime(audio.currentTime);
+        if (timeTotal) timeTotal.textContent = formatAudioTime(audio.duration);
+      } else {
+        if (timeCurrent) timeCurrent.textContent = formatAudioTime(audio.currentTime);
+      }
+    }
+
+    function initAudioMetadata(id) {
+      const audio = document.getElementById('native-audio-' + id);
+      const timeTotal = document.getElementById('time-total-' + id);
+      if (audio && audio.duration && timeTotal) {
+        timeTotal.textContent = formatAudioTime(audio.duration);
+      }
+    }
+
+    function audioEnded(id) {
+      const btnPlay = document.getElementById('icon-play-' + id);
+      const btnPause = document.getElementById('icon-pause-' + id);
+      const card = document.getElementById('card-' + id);
+      const progress = document.getElementById('progress-' + id);
+      const timeCurrent = document.getElementById('time-current-' + id);
+
+      if (btnPlay) btnPlay.style.display = 'block';
+      if (btnPause) btnPause.style.display = 'none';
+      if (card) card.classList.remove('playing');
+      if (progress) progress.style.width = '0%';
+      if (timeCurrent) timeCurrent.textContent = '0:00';
+    }
+
+    function seekAudio(event, id) {
+      const container = event.currentTarget;
+      const rect = container.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const width = rect.width;
+      const percentage = Math.max(0, Math.min(1, clickX / width));
+      const audio = document.getElementById('native-audio-' + id);
+      if (audio) {
+        if (audio.duration) {
+          audio.currentTime = percentage * audio.duration;
+          updateAudioProgress(id);
+        }
+      }
+    }
+
+    function formatAudioTime(seconds) {
+      if (isNaN(seconds)) return '0:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${String(secs).padStart(2, '0')}`;
+    }
+
+    /* ============================================================
+       PERFIL
+       ============================================================ */
+    function toggleSchoolMap() {
+      const el = document.getElementById('school-map-info');
+      el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    /* ============================================================
+       INICIALIZACIÓN
+       ============================================================ */
+    function init() {
+      injectIcons();
+      renderHomeWeekStrip();
+      renderEmotionGrid();
+      renderRibbon();
+      renderMonthGrid();
+      renderDiaryList();
+      renderDiaryMoodSelect();
+      renderActivityFilters();
+      renderActivityList();
+      renderLibraryFilters();
+      renderLibraryList();
+      document.getElementById('home-date').textContent = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+    init();
+  </script>
+</body>
+
+</html>
