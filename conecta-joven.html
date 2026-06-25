@@ -161,7 +161,7 @@
    ============================================================ */
     .bottom-nav {
       flex: 0 0 auto;
-      display: flex;
+      display: none;
       background: var(--paper);
       border-top: 1px solid var(--line);
       padding: 10px 6px 14px;
@@ -1345,6 +1345,8 @@
       line-height: 1.7;
       color: var(--ink);
       margin-bottom: 12px;
+      text-align: justify;
+      white-space: pre-line;
     }
 
     .article-cover {
@@ -2435,17 +2437,115 @@
         body: 'Organizar el tiempo de estudio en bloques cortos con descansos, dormir lo suficiente la noche anterior y practicar una respiración pausada antes de entrar al aula pueden marcar una diferencia real. El estrés moderado es normal, pero cuando se vuelve constante vale la pena pedir ayuda a un docente, orientador o psicólogo.'
       },
       {
-        key: 'l4', title: 'Construir relaciones más sanas con amigos y pareja', cat: 'Relaciones saludables', time: '6 min', emoji: '🤝', color: 'green',
-        body: 'Una relación sana se reconoce por el respeto mutuo, la posibilidad de decir que no sin miedo y el espacio para ser vos mismo/a. Aprender a poner límites de forma clara y tranquila fortalece los vínculos en lugar de dañarlos. Si una relación te genera miedo o malestar constante, es importante hablarlo con un adulto de confianza.'
+        key: 'l4',
+        title: 'Construir relaciones más sanas con amigos y pareja',
+        cat: 'Relaciones saludables',
+        time: '6 min',
+        emoji: '🤝',
+        color: 'green',
+        body: `Las relaciones forman una parte importante de nuestra vida. Ya sea con amigos, compañeros, familiares o parejas, los vínculos pueden brindarnos apoyo, alegría y compañía. Sin embargo, no todas las relaciones son saludables, y aprender a reconocer la diferencia es una habilidad que puede ayudarnos a sentirnos mejor y a cuidarnos emocionalmente.
+
+              Una relación sana se basa en el respeto mutuo. Esto significa que cada persona puede expresar sus opiniones, sentimientos y necesidades sin miedo a ser ridiculizada, ignorada o castigada por ello. No es necesario estar de acuerdo en todo para tener una buena relación. De hecho, las diferencias son normales y forman parte de cualquier vínculo.
+
+              Otro aspecto importante es la confianza. La confianza no consiste en controlar a la otra persona ni en saber constantemente dónde está o qué hace. Una relación saludable permite que cada uno tenga su propio espacio, sus amistades, sus intereses y sus actividades sin sentirse culpable por ello.
+
+              También es fundamental sentirse libre para ser uno mismo. Cuando una relación nos obliga a cambiar nuestra personalidad, ocultar lo que pensamos o actuar de una manera que no nos representa, es probable que algo no esté funcionando bien. Los vínculos saludables permiten que las personas crezcan sin perder su identidad.
+
+              Aprender a poner límites es una parte importante de cualquier relación. Un límite es una forma de comunicar aquello con lo que nos sentimos cómodos y aquello que no estamos dispuestos a aceptar. Decir "no", expresar una incomodidad o pedir respeto no debería generar miedo. Aunque al principio pueda resultar difícil, establecer límites claros suele fortalecer las relaciones porque ayuda a evitar malentendidos y resentimientos.
+
+              En la adolescencia y la juventud es frecuente sentir presión por encajar, agradar o evitar conflictos. Esto puede llevar a aceptar situaciones que nos hacen sentir incómodos por miedo a perder una amistad o una relación. Sin embargo, una relación saludable no debería depender de que renuncies a tus valores, tus intereses o tu bienestar emocional.
+
+              También es importante prestar atención a ciertas señales de alerta. Los celos excesivos, el control constante, las amenazas, las humillaciones, las burlas frecuentes, la manipulación emocional o el aislamiento de otras amistades no son muestras de amor ni de amistad verdadera. A veces estas conductas aparecen de forma gradual y pueden confundirse con preocupación o cariño, pero terminan generando malestar y afectando la autoestima.
+
+              Los desacuerdos y conflictos pueden existir incluso en las mejores relaciones. Lo importante es la forma en que se manejan. Escuchar, dialogar, pedir disculpas cuando corresponde y buscar soluciones respetuosas son habilidades que ayudan a construir vínculos más fuertes y duraderos.
+
+              Rodearte de personas que te respeten, te escuchen y valoren quién sos puede tener un impacto muy positivo en tu bienestar emocional. Del mismo modo, aprender a ofrecer respeto, empatía y comprensión a los demás contribuye a construir relaciones más sanas y satisfactorias.
+
+              Si una relación te genera miedo, angustia constante, inseguridad o afecta tu bienestar emocional, es importante hablarlo con una persona de confianza. Un familiar, docente, orientador o profesional puede ayudarte a analizar la situación y encontrar apoyo.
+
+              Las relaciones saludables no son perfectas, pero sí son espacios donde las personas pueden sentirse seguras, respetadas y valoradas. Aprender a construirlas lleva tiempo, pero es una de las habilidades más importantes para el bienestar emocional a lo largo de toda la vida.`
       },
       {
-        key: 'l5', title: 'Qué hacer si sentís que no encajás en el grupo', cat: 'Convivencia escolar', time: '4 min', emoji: '🏫', color: 'violet',
-        body: 'Sentirse fuera de lugar en la escuela es más común de lo que parece. Buscar espacios donde te sientas cómodo/a, aunque sean pocos vínculos, suele pesar más que encajar con todo el curso. Si la situación incluye burlas o exclusión sostenida, contarlo a un adulto de la institución es un paso válido y necesario.'
+        key: 'l5',
+        title: 'Qué hacer si sentís que no encajás en el grupo',
+        cat: 'Convivencia escolar',
+        time: '4 min',
+        emoji: '🏫',
+        color: 'violet',
+        body: `Sentir que no encajás en un grupo puede ser una experiencia dolorosa y frustrante. Muchas personas atraviesan momentos en los que sienten que no pertenecen, que son diferentes o que les cuesta encontrar su lugar dentro del curso, un grupo de amigos o una actividad determinada.
+
+              Cuando vemos a otros conversar, reírse o compartir experiencias, es fácil pensar que todos los demás tienen vínculos sólidos y que somos los únicos que nos sentimos afuera. Sin embargo, esta sensación es mucho más común de lo que parece y puede afectar a personas de cualquier edad.
+
+              Es importante recordar que no encajar en un grupo específico no significa que haya algo malo en vos. Cada persona tiene intereses, formas de pensar, gustos y tiempos distintos para construir relaciones. A veces simplemente no encontramos todavía a las personas con las que compartimos afinidades o nos sentimos cómodos siendo nosotros mismos.
+
+              También puede ocurrir que intentemos cambiar nuestra forma de ser para agradar a los demás. Aunque esto puede parecer una solución rápida, mantener una versión de nosotros mismos que no es auténtica suele generar más malestar con el tiempo. Las relaciones más saludables son aquellas en las que podemos expresarnos con naturalidad y sentirnos aceptados sin tener que fingir.
+
+              Buscar espacios donde compartas intereses con otras personas puede ser una buena estrategia. Un taller, un deporte, una actividad artística, un proyecto escolar o cualquier actividad que te guste puede ayudarte a conocer personas con quienes tengas cosas en común.
+
+              También es importante valorar la calidad de los vínculos por encima de la cantidad. No es necesario ser amigo de todo el curso ni pertenecer al grupo más popular para sentirse acompañado. Muchas veces, uno o dos vínculos sinceros tienen un impacto mucho más positivo que formar parte de un grupo grande donde no te sentís cómodo.
+
+              Si la situación incluye burlas, exclusión intencional, humillaciones o agresiones repetidas, ya no se trata solamente de una dificultad para encajar. En esos casos es importante buscar ayuda y contarlo a un adulto de confianza, como un familiar, un docente, un preceptor o un integrante del equipo de orientación de la institución.
+
+              Pedir ayuda no significa exagerar ni generar problemas. Todas las personas tienen derecho a sentirse seguras, respetadas y valoradas dentro de la escuela.
+
+              Aunque hoy puedas sentir que no encontrás tu lugar, eso no significa que siempre será así. Los grupos cambian, las personas cambian y las oportunidades de conocer nuevas amistades aparecen constantemente. Darte tiempo, cuidarte y buscar espacios donde puedas ser vos mismo son pasos importantes para construir relaciones más sanas y significativas.`
       },
+
       {
-        key: 'l6', title: 'Entender la ansiedad: qué es y qué no es', cat: 'Bienestar emocional', time: '5 min', emoji: '🌊', color: 'green',
-        body: 'La ansiedad es una respuesta natural del cuerpo frente a una amenaza percibida, y en dosis bajas puede incluso ayudarte a prepararte para un desafío. El problema aparece cuando se vuelve constante o desproporcionada. Identificar qué la dispara y aprender técnicas de respiración son herramientas útiles, pero si interfiere con tu día a día, conviene buscar acompañamiento profesional.'
+        key: '16',
+        title: 'Entender la ansiedad: qué es y qué no es',
+        cat: 'Bienestar emocional',
+        time: '5 min',
+        emoji: '🌊',
+        color: 'green',
+        body: `La ansiedad es una emoción normal que todas las personas experimentan en algún momento de la vida. Aparece cuando nuestro cerebro interpreta que existe una amenaza, un desafío o una situación importante que requiere atención. En ese sentido, la ansiedad cumple una función útil: nos ayuda a prepararnos para actuar, concentrarnos y reaccionar ante posibles dificultades.
+
+                Por ejemplo, es común sentir ansiedad antes de un examen, una entrevista, una competencia deportiva o una situación social importante. En pequeñas dosis, incluso puede mejorar nuestro rendimiento y mantenernos alerta.
+
+                Sin embargo, cuando la ansiedad aparece con demasiada frecuencia, se vuelve muy intensa o surge sin una causa clara, puede empezar a afectar el bienestar y la vida cotidiana.
+
+                La ansiedad no se manifiesta igual en todas las personas. Algunas la sienten principalmente en el cuerpo, mientras que otras la experimentan más a través de pensamientos o emociones.
+
+                Entre los síntomas más frecuentes se encuentran las palpitaciones, la tensión muscular, la sudoración, las molestias estomacales, la sensación de falta de aire o la inquietud constante. A nivel mental pueden aparecer preocupaciones repetitivas, pensamientos negativos sobre el futuro o dificultades para concentrarse.
+
+                También es frecuente sentir irritabilidad, nerviosismo o la sensación de estar permanentemente en alerta, incluso cuando no existe un peligro real.
+
+                Es importante comprender que sentir ansiedad no significa ser débil ni incapaz de afrontar los problemas. Tampoco significa estar exagerando o buscando llamar la atención. La ansiedad es una respuesta humana que puede aparecer en cualquier persona, independientemente de su edad, personalidad o experiencia.
+
+                Las causas pueden ser muy variadas. A veces está relacionada con situaciones concretas como problemas familiares, exigencias académicas, conflictos con amistades, cambios importantes o preocupaciones sobre el futuro.
+
+                En otras ocasiones intervienen factores biológicos, experiencias previas, estrés acumulado durante largos períodos o hábitos poco saludables como dormir mal de forma constante.
+
+                En adolescentes y jóvenes también puede aparecer por la presión de obtener buenos resultados, el miedo a equivocarse, la necesidad de sentirse aceptado por otras personas o la comparación permanente que muchas veces generan las redes sociales.
+
+                Cuando observamos las publicaciones de otras personas, podemos llegar a creer que todos tienen una vida perfecta, que siempre están felices o que nunca atraviesan dificultades. Sin embargo, las redes suelen mostrar solamente una parte de la realidad. Comparar nuestra vida cotidiana con los mejores momentos de los demás puede aumentar la ansiedad y la sensación de insuficiencia.
+
+                Aunque no existe una solución instantánea, hay estrategias que pueden ayudar a reducir su intensidad. Una de ellas es prestar atención a la respiración. Cuando estamos ansiosos tendemos a respirar de manera rápida y superficial. Respirar lenta y conscientemente puede ayudar a que el cuerpo recupere una sensación de calma.
+
+                También suele ser útil realizar actividad física regularmente, mantener horarios de descanso adecuados, alimentarse de manera saludable y dedicar tiempo a actividades que resulten agradables o relajantes.
+
+                Hablar con una persona de confianza acerca de lo que sentimos también puede ser de gran ayuda. Compartir preocupaciones no elimina los problemas, pero evita que tengamos que enfrentarlos completamente solos.
+
+                Sentir ansiedad ocasionalmente es normal. Sin embargo, puede ser conveniente buscar apoyo profesional cuando la ansiedad interfiere con el estudio, el trabajo, las relaciones personales o genera un sufrimiento constante.
+
+                También es recomendable pedir ayuda cuando aparecen ataques de pánico, cuando se comienzan a evitar situaciones importantes por miedo o cuando el malestar se mantiene durante largos períodos de tiempo.
+
+                Pedir ayuda no es una señal de fracaso. Del mismo modo que acudimos a un profesional cuando tenemos una lesión física, también es válido buscar orientación cuando una dificultad emocional afecta nuestra calidad de vida.
+
+                La ansiedad puede hacer que algunas situaciones parezcan más difíciles de lo que realmente son. Puede hacerte sentir que estás solo, que nadie entiende lo que te pasa o que las cosas nunca van a mejorar.
+
+                Sin embargo, la ansiedad no define quién sos. Es una experiencia que muchas personas atraviesan y que puede aprenderse a manejar con herramientas adecuadas, apoyo y tiempo.
+
+                Comprender lo que te ocurre es un primer paso importante. Cuanto más conocés tus emociones, más posibilidades tenés de cuidarte, pedir ayuda cuando la necesitás y desarrollar estrategias para sentirte mejor día a día.`
       },
+
+
+
+
+
+
+
+
       {
         key: 'l7', title: 'Voces que Inspiran', cat: 'Audioguías', time: '16 audios', emoji: '🎧', color: 'violet', isAudioList: true,
         audios: [
