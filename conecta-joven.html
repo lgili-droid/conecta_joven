@@ -2772,10 +2772,10 @@
     function renderHomeWeekStrip() {
       const wrap = document.getElementById('home-week-strip');
       wrap.innerHTML = weekData.map((d, i) => `
-          <div class="day-dot ${i === weekData.length - 1 ? 'is-today' : ''}" >
+          <div class="day-dot ${i === weekData.length - 1 ? 'is-today' : ''}">
       <div class="dot" style="background:${d.zone ? ZONE_COLOR[d.zone] : 'var(--line)'}"></div>
       <span>${d.day}</span>
-    </div >
+    </div>
       `).join('');
     }
 
@@ -2785,7 +2785,7 @@
     function renderEmotionGrid(){
       const grid = document.getElementById('emotion-grid');
       grid.innerHTML = MOODS.map(m => `
-        <button class="emotion-card" data-key="${m.key}" onclick = "selectEmotion('${m.key}')" >
+        <button class="emotion-card" data-key="${m.key}" onclick="selectEmotion('${m.key}')">
           <span class="emoji">${m.emoji}</span>
           <span>${m.label}</span>
         </button>
@@ -2859,10 +2859,10 @@
     function renderRibbon() {
       const row = document.getElementById('ribbon-row');
       row.innerHTML = weekData.map((d, i) => `
-      < button class="ribbon-col" data - index="${i}" onclick = "showDayDetail(${i})" >
+      <button class="ribbon-col" data-index="${i}" onclick="showDayDetail(${i})">
       <div class="ribbon-bubble ${d.zone ? '' : 'empty'}" style="background:${d.zone ? ZONE_COLOR[d.zone] : ''}"></div>
       <span>${d.day}</span>
-    </button >
+    </button>
       `).join('');
     }
 
@@ -2893,7 +2893,7 @@
         'intenso', 'alerta', 'calma', 'calma', 'calma', 'alerta', 'calma',
         'calma', 'calma', 'alerta', 'intenso', 'calma', 'calma', 'calma', 'calma', 'calma'];
       const grid = document.getElementById('month-grid');
-      grid.innerHTML = sample.map(zone => `< div class="month-dot" style = "background:${ZONE_COLOR[zone]}" ></div > `).join('');
+      grid.innerHTML = sample.map(zone => `<div class="month-dot" style = "background:${ZONE_COLOR[zone]}"></div> `).join('');
     }
 
     function escapeHtml(value) {
@@ -2916,21 +2916,21 @@
       list.innerHTML = diaryEntries.map(e => {
         const mood = MOODS.find(m => m.key === e.moodKey) || MOODS[0];
         return `
-      < div class="diary-entry" >
+      <div class="diary-entry">
         <div class="diary-entry-top">
           <span class="diary-date">${e.date}</span>
           <span class="diary-mood-tag"><span class="legend-dot" style="background:${ZONE_COLOR[mood.zone]}"></span>${mood.label}</span>
         </div>
         <p>${escapeHtml(e.text)}</p>
-      </div >
+      </div>
       `;
       }).join('');
     }
 
-    function renderDiaryMoodSelect() {
+    function renderDiaryMoodSelect(){
       const wrap = document.getElementById('diary-mood-select');
       wrap.innerHTML = MOODS.map(m => `
-      < button class="mood-select-pill" data - key="${m.key}" onclick = "pickDiaryMood('${m.key}')" > ${m.emoji} ${m.label}</button >
+        <button class="mood-select-pill" data-key="${m.key}" onclick="pickDiaryMood('${m.key}')">${m.emoji} ${m.label}</button>
         `).join('');
     }
 
@@ -2963,7 +2963,7 @@
       const cats = ['Todas', ...new Set(ACTIVITIES.map(a => a.cat))];
       const wrap = document.getElementById('activity-filters');
       wrap.innerHTML = cats.map(c => `
-        < button class="chip ${c === activityFilter ? 'active' : ''}" onclick = "setActivityFilter('${c}')" > ${c}</button >
+        <button class="chip ${c === activityFilter ? 'active' : ''}" onclick="setActivityFilter('${c}')"> ${c}</button>
           `).join('');
     }
 
@@ -2977,7 +2977,7 @@
       const list = document.getElementById('activity-list');
       const items = ACTIVITIES.filter(a => activityFilter === 'Todas' || a.cat === activityFilter);
       list.innerHTML = items.map(a => `
-          < div class="activity-card" id = "activity-${a.key}" >
+          <div class="activity-card" id="activity-${a.key}">
       <div class="activity-head" onclick="toggleActivity('${a.key}')">
         <div class="icon-wrap bg-${a.zone}">${a.emoji}</div>
         <div class="activity-head-text">
@@ -2994,7 +2994,7 @@
           </button>
         `}
       </div>
-    </div >
+    </div>
       `).join('');
     }
 
@@ -3025,14 +3025,14 @@
 
     function renderBreathingActivity() {
       const options = BREATHING_DURATIONS.map(d => `
-      < button class="breathing-option ${d.seconds === breathingDuration ? 'active' : ''}" onclick = "event.stopPropagation(); selectBreathingDuration(${d.seconds})" >
+      <button class="breathing-option ${d.seconds === breathingDuration ? 'active' : ''}" onclick="event.stopPropagation(); selectBreathingDuration(${d.seconds})">
       <strong>${d.top}</strong>
       <span>${d.bottom}</span>
-    </button >
+    </button>
       `).join('');
 
       return `
-      < div class="breathing-panel" onclick = "event.stopPropagation()" >
+      <div class="breathing-panel" onclick="event.stopPropagation()">
       <h2 class="title-lg">Respirar ahora</h2>
       <p class="breathing-subtitle">Elegí la duración</p>
       <div class="breathing-options">${options}</div>
@@ -3049,7 +3049,7 @@
         <span id="breathing-pause-icon">Ⅱ</span>
         <span id="breathing-pause-text">Pausar</span>
       </button>
-    </div >
+    </div>
       `;
     }
 
@@ -3160,7 +3160,7 @@
       const cats = ['Todas', ...new Set(ARTICLES.map(a => a.cat))];
       const wrap = document.getElementById('library-filters');
       wrap.innerHTML = cats.map(c => `
-      < button class="chip ${c === libraryFilter ? 'active' : ''}" onclick = "setLibraryFilter('${c}')" > ${c}</button >
+      <button class="chip ${c === libraryFilter ? 'active' : ''}" onclick="setLibraryFilter('${c}')">${c}</button>
         `).join('');
     }
 
@@ -3174,13 +3174,13 @@
       const list = document.getElementById('library-list');
       const items = ARTICLES.filter(a => libraryFilter === 'Todas' || a.cat === libraryFilter);
       list.innerHTML = items.map(a => `
-        < div class="article-card" onclick = "openArticle('${a.key}')" >
+        <div class="article-card" onclick="openArticle('${a.key}')">
       <div class="article-thumb bg-${a.color}">${a.emoji}</div>
       <div class="article-info">
         <strong>${a.title}</strong>
         <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time}</span></div>
       </div>
-    </div >
+    </div>
       `).join('');
     }
 
@@ -3189,7 +3189,7 @@
       const wrap = document.getElementById('article-content');
       if (a.isAudioList) {
         wrap.innerHTML = `
-      < div class="article-cover bg-${a.color}" > ${a.emoji}</div >
+      <div class="article-cover bg-${a.color}"> ${a.emoji}</div>
       <span class="badge-validado">${ICONS.checkSm} Validado por profesionales</span>
       <h1 class="title-xl">${a.title}</h1>
       <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time}</span></div>
@@ -3223,7 +3223,7 @@
     `;
       } else {
         wrap.innerHTML = `
-      < div class="article-cover bg-${a.color}" > ${a.emoji}</div >
+      <div class="article-cover bg-${a.color}">${a.emoji}</div>
       <span class="badge-validado">${ICONS.checkSm} Validado por profesionales</span>
       <h1 class="title-xl">${a.title}</h1>
       <div class="article-meta"><span>${a.cat}</span><span>·</span><span>${a.time} de lectura</span></div>
