@@ -1616,6 +1616,154 @@
       text-align: center;
       max-width: 390px;
     }
+
+    /* ============================================================
+    13. BOTÓN FLOTANTE VITA & CHAT DE VITA
+    ============================================================ */
+    .fab-vita {
+      position: absolute;
+      right: 22px;
+      bottom: 88px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet-600), var(--violet-900));
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px -8px rgba(91, 63, 140, 0.6);
+      cursor: pointer;
+      z-index: 5;
+      animation: pulse-glow 2.5s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 10px 22px -8px rgba(91, 63, 140, 0.6), 0 0 0 0px rgba(124, 92, 191, 0.4);
+      }
+      70% {
+        box-shadow: 0 10px 22px -8px rgba(91, 63, 140, 0.6), 0 0 0 10px rgba(124, 92, 191, 0);
+      }
+      100% {
+        box-shadow: 0 10px 22px -8px rgba(91, 63, 140, 0.6), 0 0 0 0px rgba(124, 92, 191, 0);
+      }
+    }
+
+    .fab-vita svg {
+      width: 24px;
+      height: 24px;
+      stroke: #fff;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin-bottom: 4px;
+      animation: bubble-fade-in 0.25s ease-out both;
+    }
+
+    @keyframes bubble-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chat-bubble.vita-msg {
+      background: var(--violet-100);
+      color: var(--ink);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-bubble.user-msg {
+      background: var(--violet-700);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input-area {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+      padding: 12px 18px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      border: 1.5px solid var(--line);
+      border-radius: 100px;
+      padding: 11px 18px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      background: var(--cream);
+    }
+
+    .chat-input-area input:focus {
+      outline: 2px solid var(--violet-400);
+      outline-offset: 1px;
+    }
+
+    .chat-input-area button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--violet-700);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .chat-input-area button svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+
+    /* Indicador de escritura animado */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--ink-soft);
+      border-radius: 50%;
+      animation: typing-bounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing-bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1.0); }
+    }
   </style>
 </head>
 
@@ -1879,6 +2027,9 @@
           </div>
 
         </div>
+        <button class="fab-vita" onclick="goTo('screen-chat-vita')">
+          ${ICON_CHAT}
+        </button>
       </section>
 
       <!-- ============================================================
@@ -2261,6 +2412,37 @@
         </div>
       </section>
 
+      <!-- ============================================================
+         PANTALLA: CHAT CON VITA (IA)
+      ============================================================= -->
+      <section class="screen" id="screen-chat-vita">
+        <div class="screen-header">
+          <button class="back-btn" onclick="goTo('screen-home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:8px; height:8px; border-radius:50%; background:var(--zone-calma); animation:pulse-green 2s infinite;"></div>
+            <p class="eyebrow" style="margin:0;">Vita</p>
+          </div>
+        </div>
+        <div class="content" id="chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; padding-bottom:14px;">
+          <div class="chat-bubble vita-msg">
+            <span>¡Hola! Soy Vita, tu espacio seguro de conversación. ¿De qué te gustaría charlar hoy? O si preferís, podés contarme cómo te sentís.</span>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Escribí un mensaje..." onkeypress="handleChatKeyPress(event)">
+          <button onclick="sendChatMessage()" id="chat-send-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
     </div>
 
     <!-- ============================================================
@@ -2312,7 +2494,8 @@
       checkSm: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`,
       info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 8v.01"/></svg>`,
       check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`,
-      phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`
+      phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+      chat: `<img src="vita.jpg" alt="Vita" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`
     };
 
     // Reemplaza los placeholders ${ICON_X} escritos en el HTML por el SVG real.
@@ -2333,7 +2516,8 @@
         ICON_CHEV: ICONS.chev,
         ICON_CHECK_SM: ICONS.checkSm,
         ICON_INFO_WHITE: ICONS.info,
-        ICON_PHONE: ICONS.phone
+        ICON_PHONE: ICONS.phone,
+        ICON_CHAT: ICONS.chat
       };
       const pattern = /\$\{(ICON_[A-Z_]+)\}/g;
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -3358,6 +3542,107 @@
     function toggleSchoolMap() {
       const el = document.getElementById('school-map-info');
       el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    /* ============================================================
+       IA VITA: CHAT SIMULADO
+       ============================================================ */
+    function handleChatKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatMessages = document.getElementById('chat-messages');
+
+      // 1. Mensaje del usuario
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user-msg';
+      userBubble.innerHTML = `<span>${escapeHtml(text)}</span>`;
+      chatMessages.appendChild(userBubble);
+
+      // Limpiar input y scroll
+      input.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // 2. Simular escritura de Vita
+      showVitaTypingIndicator(text);
+    }
+
+    function showVitaTypingIndicator(userText) {
+      const chatMessages = document.getElementById('chat-messages');
+
+      // Crear indicador
+      const typingBubble = document.createElement('div');
+      typingBubble.className = 'chat-bubble vita-msg';
+      typingBubble.id = 'vita-typing-bubble';
+      typingBubble.innerHTML = `
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      chatMessages.appendChild(typingBubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Después de 1 segundo, responder
+      setTimeout(() => {
+        // Remover indicador
+        const indicator = document.getElementById('vita-typing-bubble');
+        if (indicator) indicator.remove();
+
+        // Responder
+        const responseText = getVitaResponse(userText);
+        const vitaBubble = document.createElement('div');
+        vitaBubble.className = 'chat-bubble vita-msg';
+        vitaBubble.innerHTML = `<span>${responseText}</span>`;
+        chatMessages.appendChild(vitaBubble);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    function getVitaResponse(text) {
+      const lowerText = text.toLowerCase();
+
+      // Saludos
+      if (lowerText.includes('hola') || lowerText.includes('buenos dias') || lowerText.includes('buenas tardes') || lowerText.includes('buenas noches') || lowerText.includes('hey')) {
+        const namePart = userName ? `, ${userName.split(' ')[0]}` : '';
+        return `¡Hola${namePart}! Qué lindo encontrarte por acá. ¿Cómo estás hoy? Contame qué tenés en mente o de qué te gustaría charlar.`;
+      }
+
+      // Tristeza / Angustia
+      if (lowerText.includes('triste') || lowerText.includes('mal') || lowerText.includes('angustia') || lowerText.includes('llorar') || lowerText.includes('decaido') || lowerText.includes('bajon')) {
+        return `Siento mucho que te sientas así. Está bien tener días difíciles y no estar del todo bien. Recordá que tus emociones son válidas. ¿Te gustaría intentar desahogarte escribiendo en tu <a href="#" onclick="goTo('screen-diario-new'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">Diario Personal</a>? A veces poner en palabras lo que sentimos ayuda un montón.`;
+      }
+
+      // Ansiedad / Estrés / Nervios
+      if (lowerText.includes('ansioso') || lowerText.includes('ansiosa') || lowerText.includes('nervios') || lowerText.includes('estres') || lowerText.includes('examen') || lowerText.includes('presion') || lowerText.includes('asustado')) {
+        return `Entiendo perfectamente. Los exámenes, el estudio o los cambios pueden generar mucha presión. Cuando sientas que la cabeza te da mil vueltas, una de las mejores cosas que podés hacer es frenar un minuto y respirar. ¿Querés que hagamos juntos el ejercicio <a href="#" onclick="goTo('screen-actividades'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">Necesito un respiro</a>? Te va a ayudar a bajar un cambio y recuperar la calma.`;
+      }
+
+      // Alegría / Bien / Feliz
+      if (lowerText.includes('feliz') || lowerText.includes('bien') || lowerText.includes('contento') || lowerText.includes('contenta') || lowerText.includes('alegre') || lowerText.includes('genial') || lowerText.includes('lindo')) {
+        return `¡Qué alegría enorme escuchar eso! Me pone muy contenta saber que tenés un buen día. Es hermoso cuando las cosas fluyen bien. ¿Te gustaría dejar registrado este momento lindo en tu <a href="#" onclick="goTo('screen-diario-new'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">Diario</a>? Así vas a poder releerlo y acordarte de esto en los días que no sean tan fáciles.`;
+      }
+
+      // Cansancio / Sueño
+      if (lowerText.includes('cansado') || lowerText.includes('cansada') || lowerText.includes('sueño') || lowerText.includes('agotado') || lowerText.includes('sin energia')) {
+        return `El cansancio físico y mental nos avisa que es momento de parar. A veces nos exigimos demasiado. Te sugiero que te des un rato para desconectar y descansar de verdad. ¿Sabías que tenemos <a href="#" onclick="goTo('screen-biblioteca'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">Audioguías de Calma</a>? Ponerte auriculares y escuchar una de ellas te puede ayudar a relajar la mente antes de dormir.`;
+      }
+
+      // Ayuda / Emergencia
+      if (lowerText.includes('ayuda') || lowerText.includes('emergencia') || lowerText.includes('morir') || lowerText.includes('lastimar')) {
+        return `Si sentís que estás en un momento muy difícil y necesitás ayuda urgente, acordate de que no estás solo/a. Por favor, hablá con un adulto de confianza, o si querés, tocá acá para ver las <a href="#" onclick="goTo('screen-ayuda'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">Líneas de ayuda gratuita</a>. Hay profesionales que te pueden acompañar las 24 horas.`;
+      }
+
+      // Default
+      return `Te escucho atentamente. Acordate de que este es tu espacio seguro y confidencial. Si querés, contame más sobre eso, o decime si preferís que busquemos alguna <a href="#" onclick="goTo('screen-actividades'); return false;" style="color: var(--violet-700); font-weight: bold; text-decoration: underline;">actividad</a> para hacer juntos.`;
     }
 
     /* ============================================================
